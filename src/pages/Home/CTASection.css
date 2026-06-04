@@ -1,0 +1,238 @@
+/* ===== CTA Redesign / Upgrade ===== */
+
+.prestige-cta {
+  padding: var(--space-5xl) 0 var(--space-4xl);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Base Card Container */
+.cta-card {
+  position: relative;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 80px 40px;
+  text-align: center;
+  border-radius: var(--radius-2xl);
+  background: linear-gradient(135deg, rgba(12, 12, 18, 0.6) 0%, rgba(6, 6, 9, 0.85) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.8), 0 0 60px rgba(201, 168, 76, 0.03);
+  overflow: hidden;
+}
+
+.cta-card__content {
+  position: relative;
+  z-index: 5;
+}
+
+/* Dynamic Radial Glow Filters (Behind Content) */
+.cta-card__glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.12;
+  transition: all var(--transition-slow);
+}
+
+.cta-card__glow--1 {
+  top: -20%;
+  left: 10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+}
+
+.cta-card__glow--2 {
+  bottom: -30%;
+  right: 15%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, var(--accent-light) 0%, transparent 70%);
+}
+
+/* Card Hover Expansion */
+.cta-card:hover .cta-card__glow--1 {
+  opacity: 0.22;
+  transform: scale(1.1) translate(-20px, -10px);
+}
+
+.cta-card:hover .cta-card__glow--2 {
+  opacity: 0.2;
+  transform: scale(1.1) translate(20px, 10px);
+}
+
+.cta-card:hover {
+  border-color: rgba(201, 168, 76, 0.2);
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.9), 0 0 80px rgba(201, 168, 76, 0.08);
+}
+
+/* Pulsing Badge Element */
+.cta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: rgba(201, 168, 76, 0.06);
+  border: 1px solid rgba(201, 168, 76, 0.18);
+  padding: 6px 18px;
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-2xl);
+  transition: all var(--transition-base);
+}
+
+.cta-badge__dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--accent);
+  border-radius: 50%;
+  display: inline-block;
+  animation: badgePulse 2s infinite ease-in-out;
+}
+
+.cta-badge__text {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--accent-light);
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+@keyframes badgePulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.5;
+    box-shadow: 0 0 0 0 rgba(201, 168, 76, 0.6);
+  }
+  70% {
+    transform: scale(1.15);
+    opacity: 1;
+    box-shadow: 0 0 0 8px rgba(201, 168, 76, 0);
+  }
+  100% {
+    transform: scale(0.85);
+    opacity: 0.5;
+    box-shadow: 0 0 0 0 rgba(201, 168, 76, 0);
+  }
+}
+
+.cta-card:hover .cta-badge {
+  border-color: rgba(201, 168, 76, 0.35);
+  background: rgba(201, 168, 76, 0.1);
+}
+
+/* Bold Title Styling */
+.cta-title {
+  font-family: var(--font-display);
+  font-size: clamp(var(--text-3xl), 5.5vw, var(--text-6xl));
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
+  text-transform: uppercase;
+}
+
+.cta-title__highlight {
+  background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 50%, var(--accent-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+  position: relative;
+  filter: drop-shadow(0 2px 20px rgba(201, 168, 76, 0.15));
+}
+
+/* Subtext Description */
+.cta-description {
+  max-width: 680px;
+  margin: 0 auto var(--space-3xl);
+  font-size: clamp(var(--text-base), 2.5vw, var(--text-xl));
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* Button & Active Glow Overlay */
+.cta-action {
+  display: flex;
+  justify-content: center;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 48px;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  color: var(--bg-primary) !important;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: var(--text-base);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  position: relative;
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 20px rgba(201, 168, 76, 0.4), 0 0 30px rgba(201, 168, 76, 0.15);
+  cursor: pointer;
+  z-index: 10;
+}
+
+.cta-btn__glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  z-index: -1;
+  filter: blur(18px);
+  opacity: 0.45;
+  transition: all var(--transition-base);
+}
+
+.cta-btn__text {
+  position: relative;
+  z-index: 2;
+}
+
+/* Button Hover Transitions */
+.cta-btn:hover {
+  transform: translateY(-3px);
+  background: var(--accent-light);
+  box-shadow: 0 8px 30px rgba(201, 168, 76, 0.6), 0 0 50px rgba(201, 168, 76, 0.35);
+}
+
+.cta-btn:hover .cta-btn__glow {
+  opacity: 0.75;
+  transform: scale(1.12);
+}
+
+.cta-btn:active {
+  transform: translateY(-1px);
+}
+
+/* Responsive Adapters */
+@media (max-width: 768px) {
+  .cta-card {
+    padding: 60px 24px;
+    border-radius: var(--radius-xl);
+  }
+
+  .cta-badge {
+    margin-bottom: var(--space-xl);
+  }
+
+  .cta-description {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .cta-btn {
+    padding: 16px 36px;
+    width: 100%;
+    max-width: 320px;
+  }
+}

@@ -1,0 +1,1903 @@
+/* ===== LUX MOTORS — Interactive Fleet Studio Styling ===== */
+
+.fleet-page {
+  background-color: #030305;
+  color: var(--text-primary);
+  min-height: 100vh;
+  padding-top: 0; /* Background image spans behind transparent navbar */
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   Interactive Studio Hero Section
+   ========================================================================== */
+.fleet-studio {
+  position: relative;
+  width: 100%;
+  min-height: 100vh; /* Stretch to full height behind navbar */
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0 var(--container-padding) var(--space-lg) var(--container-padding);
+  background-color: #030305;
+  overflow-x: hidden;
+  overflow-y: visible;
+  transition: all var(--transition-slow);
+}
+
+/* Full-width Background Image Container */
+.fleet-studio__bg-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fleet-studio__bg-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 65%; /* Shift car up slightly to clear the bottom selector */
+  opacity: 0;
+  transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: brightness(0.65);
+}
+
+.fleet-studio__bg-img--active {
+  opacity: 1;
+}
+
+/* Premium Dark Gradient Studio Overlay */
+.fleet-studio__bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(3, 3, 5, 0.2) 0%,
+    rgba(3, 3, 5, 0.7) 65%,
+    rgba(3, 3, 5, 0.95) 100%
+  );
+  z-index: 2;
+}
+
+/* Ambient Studio Light Halo */
+.fleet-studio__ambient-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60vw;
+  height: 40vh;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--active-rgb), 0.18) 0%, rgba(var(--active-rgb), 0.02) 60%, rgba(3, 3, 5, 0) 100%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 2;
+  transition: all var(--transition-slow);
+}
+
+/* Studio Watermark Logo Text */
+.fleet-studio__watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: clamp(8rem, 15vw, 16rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  opacity: 0.025;
+  letter-spacing: 0.05em;
+  line-height: 0.8;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+  user-select: none;
+}
+
+/* Studio Layout grid: 3-column layout */
+.fleet-studio__container {
+  display: grid;
+  grid-template-columns: 1.2fr 2fr 1.2fr;
+  align-items: center;
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  flex-grow: 1;
+  z-index: 3;
+  position: relative;
+  gap: var(--space-xl);
+  padding-top: 110px; /* Offset content elements below fixed header navbar */
+}
+
+/* --- Left Dashboard Section --- */
+.fleet-studio__dashboard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.fleet-studio__category {
+  font-family: var(--font-mono);
+  color: var(--active-theme-color);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  margin-bottom: var(--space-sm);
+  transition: color var(--transition-base);
+  display: block;
+}
+
+.fleet-studio__title-wrapper {
+  overflow: hidden;
+  margin-bottom: var(--space-md);
+}
+
+.fleet-studio__title {
+  font-size: clamp(var(--text-4xl), 4vw, var(--text-6xl));
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  animation: text-slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.fleet-studio__tagline {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  font-weight: 400;
+  max-width: 380px;
+  margin-bottom: var(--space-xl);
+  line-height: 1.5;
+}
+
+.fleet-studio__price-box {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--space-xl);
+  border-left: 2px solid var(--active-theme-color);
+  padding-left: var(--space-md);
+  transition: border-color var(--transition-base);
+}
+
+.fleet-studio__price-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.fleet-studio__price-value {
+  font-size: var(--text-3xl);
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.fleet-studio__price-unit {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* Booking buttons */
+.fleet-studio__actions {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.fleet-studio__book-btn {
+  background: var(--active-theme-color);
+  color: #000;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  transition: transform var(--transition-spring), background var(--transition-base), box-shadow var(--transition-base);
+  box-shadow: 0 4px 20px rgba(var(--active-rgb), 0.3);
+}
+
+.fleet-studio__book-btn:hover {
+  transform: translateY(-2px);
+  background: #fff;
+  color: #000;
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+}
+
+.fleet-studio__spec-btn {
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 14px 24px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  transition: all var(--transition-base);
+}
+
+.fleet-studio__spec-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--glass-border-hover);
+}
+
+/* --- Center Showcase Stage Section --- */
+.fleet-studio__stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  min-height: 380px;
+  width: 100%;
+}
+
+/* Perspective Ellipse Orbit */
+.fleet-studio__orbit {
+  position: absolute;
+  width: 90%;
+  height: 25%;
+  border: 1.5px solid rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  transform: rotateX(72deg);
+  bottom: 8%;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 50%, rgba(var(--active-rgb), 0.03) 0%, transparent 80%);
+}
+
+.fleet-studio__orbit-points {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+}
+
+.fleet-studio__orbit-dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.25);
+  border: 2px solid transparent;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotateX(-72deg);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fleet-studio__orbit-dot:hover {
+  background: #fff;
+  box-shadow: 0 0 10px #fff;
+  transform: translate(-50%, -50%) rotateX(-72deg) scale(1.5);
+}
+
+.fleet-studio__orbit-dot--active {
+  background: var(--active-theme-color);
+  box-shadow: 0 0 15px var(--active-theme-color);
+  transform: translate(-50%, -50%) rotateX(-72deg) scale(1.8);
+  border-color: #ffffff;
+}
+
+/* Showcase Car Container (Overlay for Hotspots) */
+.fleet-studio__car-container {
+  position: absolute;
+  width: 100%;
+  max-width: 650px;
+  height: 100%;
+  max-height: 360px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+  transition: transform 0.1s ease-out;
+  pointer-events: none;
+}
+
+/* Pulsing Hotspots on the vehicle */
+.fleet-studio__hotspot {
+  position: absolute;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.fleet-studio__hotspot-trigger {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid var(--active-theme-color);
+  cursor: pointer;
+  box-shadow: 0 0 15px var(--active-theme-color);
+  transition: all var(--transition-base);
+  animation: pulse-glow 2s infinite;
+}
+
+.fleet-studio__hotspot:hover .fleet-studio__hotspot-trigger,
+.fleet-studio__hotspot--active .fleet-studio__hotspot-trigger {
+  background: var(--active-theme-color);
+  border-color: #ffffff;
+  transform: scale(1.3);
+  animation: none;
+}
+
+/* Hotspot glass tooltip card */
+.fleet-studio__tooltip {
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  width: 250px;
+  background: rgba(10, 10, 15, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 100;
+  box-shadow: var(--shadow-xl);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fleet-studio__hotspot:hover .fleet-studio__tooltip,
+.fleet-studio__hotspot--active .fleet-studio__tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.fleet-studio__tooltip-title {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+  font-family: var(--font-body);
+}
+
+.fleet-studio__tooltip-desc {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Spec labels panel (now direct column aligned right) */
+.fleet-studio__specs-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 3;
+}
+
+.fleet-studio__spec-item {
+  background: rgba(10, 10, 15, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: 14px 22px;
+  width: 150px;
+  text-align: right;
+  transition: all var(--transition-base);
+}
+
+.fleet-studio__spec-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--active-theme-color);
+  transform: translateX(-5px);
+}
+
+.fleet-studio__spec-num {
+  font-size: var(--text-2xl);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.fleet-studio__spec-num-unit {
+  font-size: var(--text-sm);
+  color: var(--active-theme-color);
+  margin-left: 2px;
+}
+
+.fleet-studio__spec-label {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   Bottom Carousel Selector
+   ========================================================================== */
+.fleet-studio__selector {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  z-index: 3;
+  padding: var(--space-md) 0;
+}
+
+.fleet-studio__selector-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-md);
+}
+
+.fleet-studio__thumb {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  transition: all var(--transition-spring);
+}
+
+.fleet-studio__thumb:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.fleet-studio__thumb--active {
+  background: rgba(var(--active-rgb), 0.06);
+  border-color: var(--active-theme-color);
+  box-shadow: 0 4px 15px rgba(var(--active-rgb), 0.15);
+}
+
+.fleet-studio__thumb-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.fleet-studio__thumb-name {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+.fleet-studio__thumb-brand {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.fleet-studio__thumb-arrow {
+  color: var(--text-muted);
+  transition: transform var(--transition-base), color var(--transition-base);
+  flex-shrink: 0;
+}
+
+.fleet-studio__thumb:hover .fleet-studio__thumb-arrow,
+.fleet-studio__thumb--active .fleet-studio__thumb-arrow {
+  color: var(--active-theme-color);
+  transform: rotate(45deg);
+}
+
+/* ==========================================================================
+   Full Fleet Grid Section (Grid Browse)
+   ========================================================================== */
+.fleet-grid-section {
+  padding: var(--space-4xl) 0;
+  background-color: #060609;
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.fleet-grid__header {
+  text-align: center;
+  margin-bottom: var(--space-3xl);
+}
+
+.fleet-grid__subtitle {
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto var(--space-2xl) auto;
+}
+
+/* Category Filters */
+.fleet-filters {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-3xl);
+  flex-wrap: wrap;
+  transition: all var(--transition-base);
+}
+
+.fleet-filter-btn {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(20, 20, 28, 0.5);
+  padding: 10px 22px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all var(--transition-base), transform var(--transition-fast);
+}
+
+.fleet-filter-btn:hover {
+  background: rgba(201, 168, 76, 0.03);
+  border-color: rgba(201, 168, 76, 0.35);
+  color: var(--accent-light);
+  transform: translateY(-2px);
+}
+
+.fleet-filter-btn:active {
+  transform: translateY(0) scale(0.95);
+}
+
+.fleet-filter-btn--active {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%) !important;
+  color: #050508 !important;
+  border-color: var(--accent) !important;
+  font-weight: 700;
+  box-shadow: 0 6px 20px rgba(201, 168, 76, 0.25), 0 0 30px rgba(201, 168, 76, 0.1);
+  transform: translateY(-2px);
+}
+
+.fleet-filter-btn--active:hover {
+  background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 100%) !important;
+  box-shadow: 0 8px 25px rgba(201, 168, 76, 0.35), 0 0 35px rgba(201, 168, 76, 0.15);
+}
+
+/* Car Cards Grid Layout */
+.fleet-grid__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-xl);
+}
+
+/* Animations */
+@keyframes text-slide-up {
+  0% { transform: translateY(100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes car-slide-in {
+  0% { opacity: 0; transform: translateX(60px) scale(0.9) rotateY(15deg); filter: blur(5px); }
+  100% { opacity: 1; transform: translateX(0) scale(1) rotateY(0); filter: blur(0); }
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(var(--active-rgb), 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(var(--active-rgb), 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--active-rgb), 0);
+  }
+}
+
+/* Mobile-only elements (hidden on desktop) */
+.fleet-studio__mobile-dots,
+.fleet-studio__see-more-btn,
+.fleet-mobile-drawer {
+  display: none;
+}
+
+/* Mobile CTA — Hidden on desktop, shown on mobile outside hero */
+.fleet-studio__mobile-cta {
+  display: none;
+}
+
+.fleet-studio__mobile-cta-inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+@media (max-width: 1200px) {
+  .fleet-studio {
+    height: 100dvh; /* Force exactly full screen view on mobile, no overflow */
+    min-height: -webkit-fill-available;
+    max-height: 100dvh;
+    padding-bottom: var(--space-md);
+    overflow: hidden;
+  }
+
+  .fleet-studio__bg-container {
+    display: block !important; /* Keep background image visible */
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .fleet-studio__bg-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 65%; /* Center car horizontally, align vertically at 65% */
+  }
+
+  .fleet-studio__bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at 50% 50%,
+      rgba(3, 3, 5, 0.1) 0%,
+      rgba(3, 3, 5, 0.6) 65%,
+      rgba(3, 3, 5, 0.95) 100%
+    );
+    z-index: 2;
+  }
+
+  .fleet-studio__container {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+    padding: 0 var(--container-padding);
+    padding-top: 135px;
+    height: calc(100% - var(--space-md));
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+    z-index: 3;
+  }
+
+  .fleet-studio__dashboard {
+    align-items: center;
+    text-align: center;
+    order: 1;
+    margin-bottom: var(--space-xs);
+  }
+
+  /* Hide original price+actions inside dashboard on mobile */
+  .fleet-studio__dashboard .fleet-studio__price-box,
+  .fleet-studio__dashboard .fleet-studio__actions {
+    display: none;
+  }
+
+  /* Highly premium Glassmorphism Specifications card */
+  .fleet-studio__specs-sidebar {
+    order: 2; /* Put it below tagline but above car image */
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto var(--space-sm) auto;
+    background: rgba(255, 255, 255, 0.03) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 12px 6px !important;
+    gap: 0;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 1px rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .fleet-studio__spec-item {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 4px !important;
+    text-align: center !important;
+    transform: none !important;
+    width: 100% !important;
+  }
+
+  .fleet-studio__spec-item:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .fleet-studio__spec-item:hover {
+    background: transparent !important;
+    border-color: transparent !important;
+    transform: none !important;
+  }
+
+  .fleet-studio__spec-num {
+    font-size: var(--text-xl) !important;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .fleet-studio__spec-num-unit {
+    color: var(--active-theme-color) !important;
+    text-shadow: 0 0 8px rgba(var(--active-rgb), 0.3);
+  }
+
+  .fleet-studio__spec-label {
+    font-size: 9px !important;
+    color: rgba(255, 255, 255, 0.4) !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  /* Stage flex-column alignment */
+  .fleet-studio__stage {
+    order: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: auto;
+    min-height: auto;
+    width: 100%;
+    margin-top: 0;
+    flex-grow: 1;
+    position: relative;
+  }
+
+  .fleet-studio__orbit {
+    display: none; /* Hide 3D orbit on mobile */
+  }
+
+  /* Hotspots container covers the entire background image scaled area (1024x1024 1:1) */
+  .fleet-studio__car-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) !important;
+    width: 100vh;
+    height: 100vh; /* 1:1 aspect ratio */
+    max-width: none;
+    max-height: none;
+    display: block;
+    margin: 0 auto;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  /* Apply same scaling to hotspots overlay container */
+  .fleet-studio__hotspots-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .fleet-studio__hotspot {
+    position: absolute;
+    pointer-events: auto; /* Re-enable pointer events on the hotspot triggers */
+  }
+
+  /* Pagination Dots */
+  .fleet-studio__mobile-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: var(--space-md) 0 var(--space-xs) 0;
+    z-index: 10;
+    position: relative;
+  }
+
+  .fleet-studio__mobile-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .fleet-studio__mobile-dot--active {
+    width: 24px;
+    border-radius: 4px;
+    background: var(--active-theme-color);
+    box-shadow: 0 0 10px rgba(var(--active-rgb), 0.5);
+  }
+
+  /* SEE MORE MODELS Button */
+  .fleet-studio__see-more-btn {
+    display: block;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 2px;
+    padding: 10px 24px;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    margin: var(--space-xs) auto var(--space-sm) auto;
+    z-index: 10;
+    position: relative;
+  }
+
+  .fleet-studio__see-more-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--active-theme-color);
+    box-shadow: 0 0 15px rgba(var(--active-rgb), 0.15);
+  }
+
+  /* Hide horizontal thumbnails list on mobile */
+  .fleet-studio__selector {
+    display: none !important;
+  }
+
+  .fleet-studio__tagline {
+    max-width: 480px;
+    margin-bottom: var(--space-md);
+  }
+
+  /* Show mobile CTA outside hero (if page overflows) */
+  .fleet-studio__mobile-cta {
+    display: none !important; /* Hide it completely on full viewport hero */
+  }
+
+  /* Specific background image and hotspot container alignment shifts for top-heavy cars */
+  .fleet-studio__bg-img--rolls-royce-ghost,
+  .fleet-studio__bg-img--porsche-911-gt3,
+  .fleet-studio__bg-img--lamborghini-urus {
+    transform: translateY(50px) scale(1.12);
+  }
+
+  .fleet-studio__car-container--rolls-royce-ghost,
+  .fleet-studio__car-container--porsche-911-gt3,
+  .fleet-studio__car-container--lamborghini-urus {
+    transform: translate(-50%, calc(-50% + 50px)) scale(1.12) !important;
+  }
+
+  .fleet-studio__watermark {
+    display: none;
+  }
+
+  /* Bottom-Sheet Model Selector Drawer styles */
+  .fleet-mobile-drawer {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    visibility: hidden;
+    pointer-events: none;
+    transition: visibility 0.4s;
+  }
+
+  .fleet-mobile-drawer--open {
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .fleet-mobile-drawer__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .fleet-mobile-drawer--open .fleet-mobile-drawer__overlay {
+    opacity: 1;
+  }
+
+  .fleet-mobile-drawer__content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(8, 8, 12, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px 20px 0 0;
+    padding: var(--space-lg) var(--container-padding) calc(var(--space-2xl) + env(safe-area-inset-bottom));
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .fleet-mobile-drawer--open .fleet-mobile-drawer__content {
+    transform: translateY(0);
+  }
+
+  .fleet-mobile-drawer__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .fleet-mobile-drawer__header h3 {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    letter-spacing: 2px;
+    color: var(--accent-light);
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .fleet-mobile-drawer__close {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color var(--transition-fast);
+  }
+
+  .fleet-mobile-drawer__close:hover {
+    color: var(--accent);
+  }
+
+  .fleet-mobile-drawer__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    max-height: 50vh;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .fleet-mobile-drawer__list::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .fleet-mobile-drawer__list::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .fleet-mobile-drawer__list::-webkit-scrollbar-thumb {
+    background: rgba(201, 168, 76, 0.25);
+    border-radius: var(--radius-full);
+  }
+
+  .fleet-mobile-drawer__item {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all var(--transition-spring);
+    width: 100%;
+  }
+
+  .fleet-mobile-drawer__item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .fleet-mobile-drawer__item--active {
+    background: rgba(var(--active-rgb), 0.06);
+    border-color: var(--active-theme-color);
+    box-shadow: 0 4px 15px rgba(var(--active-rgb), 0.15);
+  }
+
+  .fleet-mobile-drawer__item-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fleet-mobile-drawer__item-brand {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .fleet-mobile-drawer__item-name {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .fleet-mobile-drawer__item-arrow {
+    color: var(--text-muted);
+    transition: transform var(--transition-base), color var(--transition-base);
+  }
+
+  .fleet-mobile-drawer__item:hover .fleet-mobile-drawer__item-arrow,
+  .fleet-mobile-drawer__item--active .fleet-mobile-drawer__item-arrow {
+    color: var(--active-theme-color);
+    transform: translate(2px, -2px);
+  }
+}
+
+@media (max-width: 768px) {
+  .fleet-studio {
+    padding-bottom: var(--space-md);
+  }
+
+  .fleet-studio__container {
+    gap: var(--space-sm);
+    padding-top: 120px;
+  }
+
+  .fleet-studio__title {
+    font-size: clamp(var(--text-3xl), 7vw, var(--text-5xl));
+  }
+
+  .fleet-studio__tagline {
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-md);
+  }
+
+  .fleet-studio__tooltip {
+    width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .fleet-studio__container {
+    padding-top: 110px;
+    gap: var(--space-xs);
+  }
+
+  .fleet-studio__category {
+    font-size: var(--text-xs);
+    letter-spacing: 3px;
+    margin-bottom: 4px;
+  }
+
+  .fleet-studio__title {
+    font-size: var(--text-3xl);
+  }
+
+  .fleet-studio__title-wrapper {
+    margin-bottom: var(--space-xs);
+  }
+
+  .fleet-studio__tagline {
+    font-size: var(--text-xs);
+    margin-bottom: var(--space-sm);
+    max-width: 300px;
+  }
+
+  .fleet-studio__mobile-cta .fleet-studio__price-label {
+    font-size: 9px;
+  }
+
+  .fleet-studio__mobile-cta .fleet-studio__price-value {
+    font-size: var(--text-xl);
+  }
+
+  .fleet-studio__mobile-cta .fleet-studio__price-box {
+    margin-bottom: var(--space-sm);
+  }
+
+  .fleet-studio__mobile-cta .fleet-studio__actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .fleet-studio__mobile-cta .fleet-studio__book-btn,
+  .fleet-studio__mobile-cta .fleet-studio__spec-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 16px;
+  }
+
+  .fleet-studio__tooltip {
+    width: 180px;
+    padding: var(--space-sm);
+  }
+
+  .fleet-studio__tooltip-title {
+    font-size: var(--text-xs);
+  }
+
+  .fleet-studio__tooltip-desc {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .fleet-filters {
+    justify-content: flex-start;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding: 4px var(--container-padding) 16px var(--container-padding);
+    margin-left: calc(-1 * var(--container-padding));
+    margin-right: calc(-1 * var(--container-padding));
+    -webkit-overflow-scrolling: touch;
+    gap: var(--space-sm);
+  }
+  
+  .fleet-filters::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  .fleet-filters::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .fleet-filters::-webkit-scrollbar-thumb {
+    background: rgba(201, 168, 76, 0.25);
+    border-radius: var(--radius-full);
+  }
+  
+  .fleet-filter-btn {
+    padding: 8px 18px;
+    flex-shrink: 0;
+  }
+}
+
+/* ==========================================================================
+   Advanced Filtering Panel Redesign Styles
+   ========================================================================== */
+
+.fleet-search-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.fleet-search-input-wrapper {
+  position: relative;
+  flex-grow: 1;
+}
+
+.fleet-search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+  transition: color var(--transition-base);
+}
+
+.fleet-search-input {
+  width: 100%;
+  background: rgba(20, 20, 28, 0.45);
+  border: 1px solid var(--glass-border);
+  padding: 12px 48px 12px 44px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  outline: none;
+  transition: all var(--transition-base);
+}
+
+.fleet-search-input:focus {
+  border-color: rgba(201, 168, 76, 0.4);
+  background: rgba(20, 20, 28, 0.7);
+  box-shadow: 0 0 15px rgba(201, 168, 76, 0.08);
+}
+
+.fleet-search-input:focus + .fleet-search-icon {
+  color: var(--accent);
+}
+
+.fleet-search-clear {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-fast);
+}
+
+.fleet-search-clear:hover {
+  color: var(--accent);
+}
+
+.fleet-advanced-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-family: var(--font-body);
+  font-weight: 500;
+  transition: all var(--transition-base);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.fleet-advanced-toggle:hover {
+  background: rgba(201, 168, 76, 0.03);
+  border-color: rgba(201, 168, 76, 0.25);
+  color: var(--accent-light);
+}
+
+.fleet-advanced-toggle--active {
+  background: rgba(201, 168, 76, 0.08);
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 15px rgba(201, 168, 76, 0.08);
+}
+
+/* Advanced Panel slide animation */
+.fleet-advanced-panel {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  max-width: 900px;
+  margin: 0 auto;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, margin-bottom 0.4s ease;
+  background: linear-gradient(145deg, rgba(20, 20, 28, 0.6) 0%, rgba(10, 10, 15, 0.8) 100%);
+  border: 1px solid transparent;
+  border-radius: var(--radius-xl);
+}
+
+.fleet-advanced-panel--open {
+  max-height: 600px; /* Adjust according to content size */
+  opacity: 1;
+  border-color: rgba(255, 255, 255, 0.05);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-xl);
+  box-shadow: var(--shadow-lg), 0 10px 40px rgba(0, 0, 0, 0.4);
+  overflow: visible; /* Prevent dropdown clipping */
+}
+
+.fleet-advanced-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+}
+
+.fleet-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  text-align: left;
+}
+
+.fleet-filter-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--accent-light);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+/* Range Inputs */
+.fleet-price-inputs {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.fleet-price-inputs div {
+  position: relative;
+  flex: 1;
+}
+
+.fleet-price-prefix {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.fleet-price-inputs input {
+  width: 100%;
+  background: rgba(10, 10, 15, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 8px 10px 8px 36px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  outline: none;
+  font-family: var(--font-mono);
+  transition: all var(--transition-fast);
+}
+
+.fleet-price-inputs input:focus {
+  border-color: var(--accent);
+}
+
+/* Custom Dropdown Container */
+.fleet-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+/* Trigger Button */
+.fleet-dropdown__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(10, 10, 15, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  outline: none;
+}
+
+.fleet-dropdown__trigger:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(201, 168, 76, 0.25);
+  box-shadow: 0 0 10px rgba(201, 168, 76, 0.05);
+}
+
+.fleet-dropdown__trigger--active {
+  border-color: var(--accent);
+  background: rgba(201, 168, 76, 0.03);
+  box-shadow: 0 0 15px rgba(201, 168, 76, 0.08);
+}
+
+.fleet-dropdown__trigger-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 85%;
+}
+
+.fleet-dropdown__chevron {
+  color: var(--text-muted);
+  transition: transform var(--transition-base), color var(--transition-base);
+}
+
+.fleet-dropdown__trigger--active .fleet-dropdown__chevron {
+  transform: rotate(180deg);
+  color: var(--accent);
+}
+
+/* Dropdown Menu Popover */
+.fleet-dropdown__menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
+  background: rgba(8, 8, 12, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xl), 0 20px 40px rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: dropdownFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Option List Items */
+.fleet-dropdown__option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-family: var(--font-body);
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.fleet-dropdown__option:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.fleet-dropdown__option--selected {
+  background: rgba(201, 168, 76, 0.08);
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.fleet-dropdown__check {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+/* --- Brand Selector Dropdown Custom Styles --- */
+.fleet-dropdown__menu--brands {
+  width: 580px;
+  max-width: 90vw;
+  padding: var(--space-md);
+  gap: var(--space-sm);
+  right: auto;
+}
+
+/* Align on right side if dropdown is on right column to avoid edge clipping */
+@media (min-width: 900px) {
+  .fleet-dropdown__menu--brands {
+    left: 0;
+  }
+}
+
+.fleet-brand-dropdown__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: var(--space-xs);
+  margin-bottom: var(--space-xs);
+}
+
+.fleet-brand-dropdown__header span {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+}
+
+.fleet-brand-dropdown__clear-btn {
+  background: transparent;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.fleet-brand-dropdown__clear-btn:hover {
+  opacity: 0.8;
+}
+
+/* Brands Grid */
+.fleet-brand-dropdown__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-sm);
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Custom Scrollbar for Brands List */
+.fleet-brand-dropdown__grid::-webkit-scrollbar {
+  width: 4px;
+}
+
+.fleet-brand-dropdown__grid::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.fleet-brand-dropdown__grid::-webkit-scrollbar-thumb {
+  background: rgba(201, 168, 76, 0.2);
+  border-radius: var(--radius-full);
+}
+
+@media (max-width: 520px) {
+  .fleet-brand-dropdown__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 380px) {
+  .fleet-brand-dropdown__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Brand Card Button */
+.fleet-brand-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm);
+  cursor: pointer;
+  transition: all var(--transition-spring);
+  outline: none;
+  min-height: 80px;
+}
+
+.fleet-brand-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+.fleet-brand-card--selected {
+  background: rgba(201, 168, 76, 0.06);
+  border-color: var(--accent) !important;
+  box-shadow: 0 4px 15px rgba(201, 168, 76, 0.12);
+}
+
+.fleet-brand-card--selected:hover {
+  background: rgba(201, 168, 76, 0.08);
+}
+
+.fleet-brand-card--unavailable {
+  opacity: 0.4;
+}
+
+.fleet-brand-card--unavailable:hover {
+  opacity: 0.65;
+}
+
+/* Logo Wrapper inside Card */
+.fleet-brand-card__logo-wrapper {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.fleet-brand-card__logo {
+  max-height: 100%;
+  max-width: 75%;
+  object-fit: contain;
+  filter: brightness(0.9) contrast(1.1);
+  transition: transform var(--transition-base);
+}
+
+/* Dark mode logo pop effect on hover */
+.fleet-brand-card:hover .fleet-brand-card__logo {
+  transform: scale(1.08);
+}
+
+.fleet-brand-card__fallback {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-weight: 700;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.fleet-brand-card__name {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color var(--transition-fast);
+}
+
+.fleet-brand-card:hover .fleet-brand-card__name {
+  color: var(--text-primary);
+}
+
+.fleet-brand-card--selected .fleet-brand-card__name {
+  color: var(--accent-light);
+  font-weight: 600;
+}
+
+/* Selected Badge checkmark icon overlay */
+.fleet-brand-card__check {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: var(--accent);
+  color: #000000;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Faded tag badge for unavailable luxury makes */
+.fleet-brand-card__soon {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Range Inputs Redesign */
+.fleet-price-inputs input {
+  background: rgba(10, 10, 15, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 10px 12px 10px 38px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  outline: none;
+  font-family: var(--font-mono);
+  transition: all var(--transition-base);
+}
+
+.fleet-price-inputs input:focus {
+  border-color: var(--accent);
+  background: rgba(201, 168, 76, 0.02);
+  box-shadow: 0 0 10px rgba(201, 168, 76, 0.08);
+}
+
+/* Range Slider Track & Thumb Custom Redesign */
+.fleet-filter-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(to right, rgba(201, 168, 76, 0.15) 0%, rgba(201, 168, 76, 0.5) 100%);
+  border-radius: var(--radius-full);
+  outline: none;
+  margin: var(--space-md) 0 var(--space-xs);
+  cursor: pointer;
+}
+
+.fleet-filter-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid #060609;
+  box-shadow: 0 0 12px var(--accent);
+  transition: transform var(--transition-fast), background var(--transition-fast);
+}
+
+.fleet-filter-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.25);
+  background: var(--accent-light);
+}
+
+.fleet-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-muted);
+}
+
+/* Action Rows */
+.fleet-filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  padding-top: var(--space-md);
+}
+
+.fleet-reset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.fleet-reset-btn:hover {
+  color: var(--accent);
+}
+
+/* Active Pills styling */
+.fleet-active-filters {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  animation: panelFadeIn 0.3s ease;
+}
+
+.fleet-active-filters-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.fleet-active-filters-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.fleet-filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(201, 168, 76, 0.05);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  color: var(--accent-light);
+}
+
+.fleet-filter-tag button {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px;
+  border-radius: 50%;
+  transition: all var(--transition-fast);
+}
+
+.fleet-filter-tag button:hover {
+  color: var(--accent);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.fleet-clear-all-tag {
+  background: transparent;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color var(--transition-fast);
+}
+
+.fleet-clear-all-tag:hover {
+  color: var(--accent);
+}
+
+/* Empty grid message */
+.fleet-grid__empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--space-4xl) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  color: var(--text-muted);
+}
+
+.fleet-grid__empty-icon {
+  color: rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive Overrides for Filtering */
+@media (max-width: 900px) {
+  .fleet-advanced-panel--open {
+    max-height: 700px;
+  }
+  .fleet-advanced-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .fleet-search-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-sm);
+  }
+  
+  .fleet-advanced-panel--open {
+    max-height: 1200px;
+    padding: var(--space-lg);
+  }
+
+  .fleet-advanced-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+  
+  .fleet-brands-checkboxes {
+    grid-template-columns: repeat(2, 1fr);
+    max-height: none;
+  }
+  
+  .fleet-active-filters {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xs);
+  }
+}

@@ -1,0 +1,453 @@
+/* ===== LUX MOTORS DXB — Redesigned Masterpiece Brand Marquee ===== */
+
+.brand-marquee {
+  position: relative;
+  background: var(--bg-primary);
+  overflow: hidden;
+  padding: var(--space-4xl) 0 var(--space-3xl);
+}
+
+.brand-marquee__header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto var(--space-3xl);
+}
+
+.brand-marquee__subtitle {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-top: var(--space-sm);
+}
+
+.brand-marquee__track-container {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-md) 0;
+}
+
+/* Horizontal Scrolling Track */
+.brand-marquee__track {
+  display: flex;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Edge Masking Fades to black out the left/right boundaries */
+.brand-marquee__fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 15%;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.brand-marquee__fade--left {
+  left: 0;
+  background: linear-gradient(90deg, var(--bg-primary) 0%, transparent 100%);
+}
+
+.brand-marquee__fade--right {
+  right: 0;
+  background: linear-gradient(270deg, var(--bg-primary) 0%, transparent 100%);
+}
+
+.brand-marquee__inner {
+  display: flex;
+  gap: var(--space-xl);
+  animation: marquee 35s linear infinite;
+  width: max-content;
+  padding: var(--space-sm) 0;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Luxury Glassmorphic Brand Logo Card */
+.brand-marquee__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.012);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-xl);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.15), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  flex-shrink: 0;
+  cursor: pointer;
+  height: 125px; /* Enlarged card container */
+  width: 220px;  /* Enlarged card container */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glowing Radial Spotlight inside the card on hover */
+.brand-marquee__item::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.6);
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0;
+  z-index: 0;
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  pointer-events: none;
+}
+
+/* Luxury card hover dynamics */
+.brand-marquee__item:hover {
+  transform: translateY(-8px);
+  background: rgba(255, 255, 255, 0.025);
+  border-color: rgba(201, 168, 76, 0.25);
+  box-shadow: 
+    0 16px 36px rgba(0, 0, 0, 0.4), 
+    0 8px 24px rgba(201, 168, 76, 0.08), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.brand-marquee__item:hover::before {
+  transform: translate(-50%, -50%) scale(1.1);
+  opacity: 1;
+}
+
+/* Active Highlight Border & Glow */
+.brand-marquee__item--active {
+  transform: translateY(-8px);
+  background: rgba(201, 168, 76, 0.02);
+  border-color: rgba(201, 168, 76, 0.5) !important;
+  box-shadow: 
+    0 16px 36px rgba(0, 0, 0, 0.5), 
+    0 8px 24px rgba(201, 168, 76, 0.15), 
+    inset 0 1px 0 rgba(201, 168, 76, 0.1);
+}
+
+.brand-marquee__item--active::before {
+  transform: translate(-50%, -50%) scale(1.1);
+  opacity: 1;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.2) 0%, transparent 70%);
+}
+
+/* Real Logo Image Sizing & Transition Magic */
+.brand-logo-img {
+  max-width: 85%; /* Enlarge image width limit inside card */
+  max-height: 80%; /* Enlarge image height limit inside card */
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  position: relative;
+  z-index: 1;
+  /* Monochrome Silver-White watermarked style by default */
+  filter: grayscale(100%) brightness(1.6) contrast(0.6);
+  opacity: 0.45; /* Boosted default visibility */
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* realistic color conversion on hover & active */
+.brand-marquee__item:hover .brand-logo-img,
+.brand-marquee__item--active .brand-logo-img {
+  filter: grayscale(0%) brightness(1) contrast(1) drop-shadow(0 4px 16px rgba(255, 255, 255, 0.2));
+  opacity: 0.95;
+  transform: scale(1.06);
+}
+
+.brand-logo-fallback {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  color: var(--text-muted);
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+}
+
+.brand-marquee__item:hover .brand-logo-fallback,
+.brand-marquee__item--active .brand-logo-fallback {
+  color: var(--accent);
+}
+
+/* Ticker Pause on Hover */
+.brand-marquee__track:hover .brand-marquee__inner {
+  animation-play-state: paused;
+}
+
+/* ==========================================================================
+   Brand Details Premium Panel Style
+   ========================================================================== */
+
+@keyframes panelFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.brand-detail-panel {
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-xl) var(--space-2xl);
+  border-radius: var(--radius-2xl);
+  background: rgba(10, 10, 15, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 
+    0 24px 64px rgba(0, 0, 0, 0.6), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  animation: panelFadeIn 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.brand-detail-panel__glow {
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.04) 0%, transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.brand-detail-panel__grid {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: var(--space-2xl);
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.brand-detail-panel__logo-side {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.brand-detail-panel__logo-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.005) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-xl);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  padding: var(--space-md);
+}
+
+.brand-detail-panel__logo-img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.35));
+}
+
+.brand-detail-panel__content-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.brand-detail-panel__header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: var(--space-md);
+}
+
+.brand-detail-panel__meta {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
+}
+
+.brand-detail-panel__badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent-light);
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+}
+
+.brand-detail-panel__title {
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  letter-spacing: -0.010em;
+  color: var(--text-primary);
+}
+
+.brand-detail-panel__specialty {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.brand-detail-panel__spec-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 2px;
+}
+
+.brand-detail-panel__spec-value {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.brand-detail-panel__tagline {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.brand-detail-panel__desc {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  max-width: 820px;
+  margin-bottom: var(--space-md);
+}
+
+.brand-detail-panel__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.brand-detail-panel__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-md);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+  color: #050508;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 13px 26px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(201, 168, 76, 0.25);
+  transition: all var(--transition-base);
+}
+
+.brand-detail-panel__btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(201, 168, 76, 0.4), var(--shadow-glow);
+  background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 100%);
+  color: #050508;
+}
+
+.brand-detail-panel__btn-icon {
+  font-size: var(--text-sm);
+  transition: transform var(--transition-base);
+}
+
+.brand-detail-panel__btn:hover .brand-detail-panel__btn-icon {
+  transform: translateX(4px);
+}
+
+.brand-detail-panel__link {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+  padding-bottom: 2px;
+  transition: all var(--transition-fast);
+}
+
+.brand-detail-panel__link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Responsiveness */
+@media (max-width: 1024px) {
+  .brand-marquee {
+    padding: var(--space-3xl) 0 var(--space-2xl);
+  }
+  .brand-marquee__item {
+    height: 105px;
+    width: 190px;
+  }
+  .brand-detail-panel__grid {
+    gap: var(--space-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  .brand-detail-panel {
+    padding: var(--space-lg);
+  }
+  .brand-detail-panel__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+  .brand-detail-panel__logo-side {
+    justify-content: flex-start;
+  }
+  .brand-detail-panel__logo-wrapper {
+    width: 110px;
+    height: 110px;
+  }
+  .brand-detail-panel__specialty {
+    text-align: left;
+    margin-top: var(--space-xs);
+  }
+  .brand-detail-panel__header-row {
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+}
+
+@media (max-width: 640px) {
+  .brand-marquee__item {
+    height: 90px;
+    width: 160px;
+  }
+  .brand-logo-img {
+    max-width: 80%;
+    max-height: 75%;
+  }
+  .brand-detail-panel__title {
+    font-size: var(--text-2xl);
+  }
+  .brand-detail-panel__tagline {
+    font-size: var(--text-lg);
+  }
+}

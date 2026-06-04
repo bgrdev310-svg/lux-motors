@@ -1,0 +1,209 @@
+/* ===== LUX MOTORS DXB — Redesigned Masterpiece StatsBar ===== */
+
+.stats-bar {
+  width: 90%;
+  max-width: var(--container-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding: 14px 0; /* Extremely sleek, compact height */
+  margin-top: var(--space-xl); /* Reduced margin to flow tightly from the brands details panel */
+  position: relative;
+  z-index: 20;
+  /* Premium Glass Panel Card design */
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.015) 0%, rgba(255, 255, 255, 0.003) 100%);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-top: 1px solid rgba(255, 255, 255, 0.08); /* Highlight top edge */
+  border-radius: var(--radius-2xl) !important;
+  box-shadow: 
+    0 16px 48px rgba(0, 0, 0, 0.4), 
+    0 0 40px rgba(201, 168, 76, 0.01),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all var(--transition-slow);
+}
+
+.stats-bar:hover {
+  border-color: rgba(201, 168, 76, 0.12);
+  border-top-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 24px 64px rgba(0, 0, 0, 0.5), 
+    0 0 50px rgba(201, 168, 76, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+.stats-bar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: 0 var(--space-xl);
+}
+
+/* Glowing Luxury Dividers */
+.stats-bar__divider {
+  width: 1px;
+  height: 38px; /* Tighter divider height */
+  background: linear-gradient(
+    to bottom, 
+    transparent 0%, 
+    rgba(201, 168, 76, 0.18) 30%, 
+    rgba(201, 168, 76, 0.18) 70%, 
+    transparent 100%
+  );
+  opacity: 0.8;
+}
+
+/* Individual Stat Module layout */
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md); /* Closer text placement */
+  padding: var(--space-xs) var(--space-sm);
+  transition: all var(--transition-base);
+  border-radius: var(--radius-xl);
+}
+
+/* Icon Shell with Gold Rings */
+.stat-item__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px; /* Sleeker icon box size */
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.08) 0%, rgba(201, 168, 76, 0.01) 100%);
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  color: var(--accent);
+  flex-shrink: 0;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all var(--transition-base);
+}
+
+.stat-item__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+/* Text Gradient Numbers */
+.stat-item__number {
+  font-family: var(--font-mono);
+  font-size: 1.625rem; /* Sleeker, highly readable sizing */
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  transition: all var(--transition-base);
+}
+
+/* Monochrome Label Spacing */
+.stat-item__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  font-weight: 500;
+  transition: color var(--transition-base);
+}
+
+/* Hover highlights for individual modules */
+.stat-item:hover {
+  transform: scale(1.03);
+}
+
+.stat-item:hover .stat-item__icon {
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.18) 0%, rgba(201, 168, 76, 0.04) 100%);
+  border-color: rgba(201, 168, 76, 0.4);
+  box-shadow: 0 0 15px rgba(201, 168, 76, 0.15);
+  color: var(--accent-light);
+  transform: rotate(6deg);
+}
+
+.stat-item:hover .stat-item__number {
+  background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-item:hover .stat-item__label {
+  color: var(--text-secondary);
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .stats-bar {
+    margin-top: calc(-1 * var(--space-xl));
+    padding: var(--space-lg) 0;
+  }
+  .stats-bar__inner {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-lg);
+  }
+  .stats-bar__divider {
+    display: none;
+  }
+  .stat-item {
+    flex: 1 1 42%;
+    justify-content: flex-start;
+    padding-left: var(--space-xl);
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-bar {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin-top: var(--space-xl);
+    padding: 0;
+    width: 100%;
+  }
+
+  .stats-bar__inner {
+    flex-direction: column;
+    gap: var(--space-md);
+    padding: 0 var(--container-padding);
+  }
+
+  .stats-bar__divider {
+    display: none;
+  }
+
+  .stat-item {
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.005) 100%);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-full) !important;
+    box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    justify-content: flex-start;
+    padding-left: 32px;
+  }
+
+  .stat-item__icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .stat-item__number {
+    font-size: var(--text-xl);
+  }
+}
+

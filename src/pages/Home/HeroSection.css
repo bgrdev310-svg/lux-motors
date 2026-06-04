@@ -1,0 +1,479 @@
+/* ===== LUX MOTORS DXB — Redesigned Premium Hero Section ===== */
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding-top: 120px;
+  padding-bottom: var(--space-2xl);
+}
+
+/* Background Effects & Full-Screen Image Layers */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero__bg-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%; /* Spans full screen width */
+  height: 100%;
+  background-size: cover;
+  background-position: center right;
+  background-repeat: no-repeat;
+  z-index: -3;
+  opacity: 0.9;
+  transform-origin: right center;
+  animation: heroZoom 24s ease-in-out infinite alternate;
+}
+
+@keyframes heroZoom {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.05); }
+}
+
+/* Code-controlled black overlay box - refitted for seamless widescreen blending */
+.hero__bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(5, 5, 8, 1) 0%,          /* Solid black on left behind text */
+    rgba(5, 5, 8, 1) 35%,         /* Keep solid to 35% */
+    rgba(5, 5, 8, 0.6) 60%,       /* Smooth transition out */
+    rgba(5, 5, 8, 0.15) 80%,      /* Minimal overlay over the car body */
+    rgba(5, 5, 8, 0.35) 100%      /* Edge vignetting */
+  );
+  z-index: -2;
+}
+
+/* Radial Vignette & Bottom Edge Blend */
+.hero__bg-vignette {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(
+      circle at 75% 50%, 
+      transparent 30%, 
+      rgba(5, 5, 8, 0.25) 70%, 
+      rgba(5, 5, 8, 0.85) 100%
+    ),
+    linear-gradient(
+      to top,
+      rgba(5, 5, 8, 1) 0%,
+      transparent 10%
+    );
+  z-index: -1;
+  pointer-events: none;
+}
+
+.hero__gradient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.25;
+  z-index: -2;
+}
+
+.hero__gradient-orb--1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  top: -150px;
+  right: -50px;
+  animation: float 8s ease-in-out infinite;
+}
+
+.hero__gradient-orb--2 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.12) 0%, transparent 70%);
+  bottom: -80px;
+  left: -50px;
+  animation: float 10s ease-in-out infinite reverse;
+}
+
+.hero__grid-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 80%);
+  z-index: -2;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(25px, -15px) scale(1.03); }
+  66% { transform: translate(-15px, 10px) scale(0.97); }
+}
+
+/* Content Layout */
+.hero__content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: var(--space-xl);
+  align-items: center;
+  width: 100%;
+}
+
+/* Left Side — Text */
+.hero__text {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero__text--visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.hero__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-bottom: var(--space-md);
+  padding: 6px 12px;
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  border-radius: var(--radius-full);
+}
+
+.hero__label-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--accent-glow); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 6px transparent; }
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(var(--text-4xl), 4.5vw, var(--text-6xl));
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: var(--space-md);
+}
+
+.hero__title-line {
+  display: block;
+}
+
+.hero__title-accent {
+  background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 50%, var(--accent-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-style: italic;
+}
+
+.hero__description {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  max-width: 480px;
+  line-height: 1.6;
+  margin-bottom: var(--space-lg);
+}
+
+.hero__ctas {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+/* Trust Section */
+.hero__trust {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.hero__trust-avatars {
+  display: flex;
+}
+
+.hero__trust-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--bg-primary);
+  border: 2px solid var(--bg-primary);
+  margin-left: -8px;
+}
+
+.hero__trust-avatar:first-child {
+  margin-left: 0;
+}
+
+.hero__trust-text {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.hero__trust-rating {
+  color: var(--accent);
+  font-size: var(--text-sm);
+  letter-spacing: 2px;
+}
+
+/* Right Side — Car Widgets Container */
+.hero__car {
+  position: relative;
+  min-height: 480px;
+  opacity: 0;
+  transform: translateX(40px);
+  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero__car--visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Lamborghini Urus Badge (Moved to top-right) */
+.hero__car-badge {
+  position: absolute;
+  top: -15px; /* Shifted up moderately to prevent navbar overlap while utilizing vertical space */
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Right-align inside card on desktop */
+  text-align: right;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  padding: 10px 18px; /* Refined smaller padding */
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,0.05);
+  animation: badgeFloat 6s ease-in-out infinite;
+}
+
+@keyframes badgeFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.hero__car-badge-name {
+  font-family: var(--font-mono);
+  font-size: 1rem; /* Smaller sizing */
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.hero__car-badge-tagline {
+  font-size: 0.75rem; /* Smaller sizing */
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Floating Cards */
+.hero__float-card {
+  position: absolute;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-md) var(--space-lg);
+  z-index: 10;
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,0.05);
+  animation: cardFloat 5s ease-in-out infinite;
+}
+
+/* Spec card - Shifted down moderately to align with review section baseline */
+.hero__float-card--specs {
+  bottom: -20px; /* Shifted down moderately to line up perfectly with reviews baseline */
+  right: 0;
+  animation-delay: 1.2s;
+  display: flex;
+  gap: var(--space-lg);
+  align-items: center;
+}
+
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Specs */
+.hero__spec {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.hero__spec-icon {
+  color: var(--accent);
+}
+
+.hero__spec-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--text-primary);
+  display: block;
+}
+
+.hero__spec-label {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.hero__spec-divider {
+  width: 1px;
+  height: 36px;
+  background: var(--glass-border);
+}
+
+/* Scroll Indicator */
+.hero__scroll {
+  position: absolute;
+  bottom: var(--space-xl);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  z-index: 10;
+}
+
+.hero__scroll-icon {
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .hero {
+    min-height: auto;
+    padding-top: 110px;
+    padding-bottom: var(--space-3xl);
+  }
+  
+  .hero__bg-image {
+    width: 100%;
+    opacity: 0.45;
+    background-position: center;
+  }
+  
+  .hero__bg-overlay {
+    background: linear-gradient(
+      to bottom,
+      rgba(5, 5, 8, 0.75) 0%,
+      rgba(5, 5, 8, 0.85) 50%,
+      rgba(5, 5, 8, 0.95) 100%
+    );
+  }
+  
+  .hero__content {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: var(--space-3xl);
+  }
+  
+  .hero__description {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .hero__ctas {
+    justify-content: center;
+  }
+  
+  .hero__trust {
+    justify-content: center;
+  }
+  
+  .hero__car {
+    display: none;
+  }
+  
+  .hero__car-badge {
+    left: 50%;
+    transform: translateX(-50%) translateY(0);
+    bottom: 20px;
+    top: auto;
+    right: auto;
+    text-align: center;
+    align-items: center;
+    background: rgba(10, 10, 15, 0.75);
+    animation: badgeFloat 6s ease-in-out infinite;
+    width: 85%;
+  }
+  
+  .hero__float-card--specs {
+    display: none; /* Hidden on tablet just like original */
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding-top: 90px;
+  }
+  
+  .hero__label {
+    font-size: var(--text-xs);
+    letter-spacing: 1.5px;
+  }
+  
+  .hero__scroll {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding-top: 90px;
+  }
+  
+  .hero__label {
+    font-size: var(--text-xs);
+    letter-spacing: 1.5px;
+  }
+}

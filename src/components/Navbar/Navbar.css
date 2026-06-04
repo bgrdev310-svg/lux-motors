@@ -1,0 +1,376 @@
+/* ===== LUX MOTORS DXB — Redesigned Premium Navbar ===== */
+
+.navbar {
+  position: fixed;
+  top: var(--space-md);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95%;
+  max-width: 1400px;
+  z-index: 1000;
+  padding: 8px var(--space-lg);
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  background: rgba(10, 10, 15, 0.2);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+}
+
+.navbar--hidden {
+  transform: translate(-50%, -130%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.navbar--scrolled {
+  top: 16px;
+  width: 85%;
+  max-width: 1100px;
+  background: rgba(10, 10, 15, 0.65);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 10px 40px rgba(0, 0, 0, 0.6), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.navbar--open {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.navbar--open .navbar__phone,
+.navbar--open .navbar__cta {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xl);
+  position: relative;
+  height: 48px;
+}
+
+/* Logo */
+.navbar__logo {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: transform var(--transition-base);
+  position: relative;
+  z-index: 10;
+}
+
+.navbar__logo:hover {
+  transform: scale(1.02);
+}
+
+.navbar__logo-lux {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: 2px;
+}
+
+.navbar__logo-motors {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+.navbar__logo:hover .navbar__logo-lux {
+  color: var(--accent-light);
+}
+
+/* Nav Links - Glass Pill Style Centered */
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 4px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  transition: all var(--transition-base);
+}
+
+.navbar--scrolled .navbar__links {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.03);
+}
+
+.navbar__link {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.5px;
+  position: relative;
+  z-index: 1;
+}
+
+.navbar__link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-full);
+  transform: scale(0.8);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+}
+
+.navbar__link:hover {
+  color: var(--text-primary);
+}
+
+.navbar__link:hover::before {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Actions */
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  position: relative;
+  z-index: 10;
+}
+
+.navbar__phone {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all var(--transition-base);
+  padding: 8px var(--space-md);
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+}
+
+.navbar__phone:hover {
+  color: var(--accent);
+}
+
+.navbar--scrolled .navbar__phone span {
+  display: none; /* Hide phone text when navbar is scrolled to save space */
+}
+
+.navbar--scrolled .navbar__phone {
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.navbar--scrolled .navbar__phone:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--accent-light);
+}
+
+/* Premium WhatsApp Booking Button */
+.navbar__cta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 10px 24px;
+  background: var(--text-primary);
+  color: var(--bg-primary) !important;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+.navbar__cta span,
+.navbar__cta svg {
+  position: relative;
+  z-index: 2;
+  transition: color var(--transition-base);
+}
+
+.navbar__cta::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  z-index: 1;
+}
+
+.navbar__cta:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gold);
+  color: var(--bg-primary) !important;
+}
+
+.navbar__cta:hover::after {
+  transform: translateY(0);
+}
+
+/* Mobile Toggle Button */
+.navbar__menu-btn {
+  display: none;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: var(--radius-full);
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-base);
+}
+
+.navbar__menu-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Mobile Menu */
+.navbar__mobile {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(5, 5, 8, 0.96);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-slow);
+  z-index: -1;
+}
+
+.navbar__mobile--open {
+  opacity: 1;
+  visibility: visible;
+  z-index: 999;
+}
+
+.navbar__mobile-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-3xl);
+}
+
+.navbar__mobile-link {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  color: var(--text-primary);
+  text-decoration: none;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all var(--transition-base);
+}
+
+.navbar__mobile--open .navbar__mobile-link {
+  opacity: 1;
+  transform: translateY(0);
+  animation: fadeInUp 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.navbar__mobile-link:hover {
+  color: var(--accent);
+}
+
+.navbar__mobile-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.navbar__mobile-phone,
+.navbar__mobile-cta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--text-lg);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.navbar__mobile-cta {
+  padding: 12px 32px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+  color: var(--bg-primary);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  box-shadow: var(--shadow-gold);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Rules */
+@media (max-width: 1024px) {
+  .navbar__links {
+    display: none;
+  }
+  .navbar__phone span {
+    display: none;
+  }
+  .navbar__menu-btn {
+    display: flex;
+  }
+  .navbar--scrolled {
+    width: 95%;
+  }
+}
+
+@media (max-width: 640px) {
+  .navbar__phone {
+    display: none;
+  }
+  .navbar__cta span {
+    display: none;
+  }
+  .navbar__cta {
+    padding: 10px;
+    border-radius: 50%;
+  }
+}

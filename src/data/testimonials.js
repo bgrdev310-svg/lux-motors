@@ -1,0 +1,38 @@
+export const testimonials = [
+  {
+    id: 1,
+    name: 'Alexander K.',
+    location: 'Moscow, Russia',
+    rating: 5,
+    text: 'Absolutely phenomenal service. The Lamborghini Urus was delivered right to my hotel at Palm Jumeirah. Spotless condition, full tank. Will definitely be back.',
+    avatar: 'AK',
+    car: 'Lamborghini Urus',
+  },
+  {
+    id: 2,
+    name: 'Sarah M.',
+    location: 'London, UK',
+    rating: 5,
+    text: 'Rented a Rolls-Royce Ghost for my wedding weekend. The team went above and beyond — decorated the car beautifully. An unforgettable experience.',
+    avatar: 'SM',
+    car: 'Rolls-Royce Ghost',
+  },
+  {
+    id: 3,
+    name: 'James W.',
+    location: 'New York, USA',
+    rating: 5,
+    text: 'Third time renting from Lux Motors. Consistency is their superpower. Ferrari 488 was a dream on Sheikh Zayed Road. Competitive pricing too.',
+    avatar: 'JW',
+    car: 'Ferrari 488 GTB',
+  },
+  {
+    id: 4,
+    name: 'Fatima A.',
+    location: 'Dubai, UAE',
+    rating: 5,
+    text: 'Best luxury rental in Dubai, hands down. Used their monthly package for a Porsche — saved 40%. Professional team available around the clock.',
+    avatar: 'FA',
+    car: 'Porsche 911',
+  },
+];
