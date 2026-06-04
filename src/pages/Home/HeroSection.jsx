@@ -64,7 +64,7 @@ export default function HeroSection() {
             </div>
             <div className="hero__trust-text">
               <span className="hero__trust-rating">★★★★★</span>
-              <span>Trusted by <strong>10,000+</strong> clients</span>
+              <span>Trusted by <strong>1,000+</strong> clients</span>
             </div>
           </div>
         </div>

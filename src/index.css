@@ -89,3 +89,33 @@ ul, ol { list-style: none; }
 ::selection { background: var(--accent); color: var(--bg-primary); }
 
 @media (max-width: 768px) { :root { --container-padding: 16px; } }
+
+/* ===== Performance Optimizations ===== */
+/* content-visibility: auto skips rendering of off-screen sections, dramatically reducing initial layout/paint cost */
+.section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
+}
+
+/* Isolate glass blur compositing to its own layer */
+.glass, .glass-panel, .glass-widget {
+  will-change: transform;
+  contain: layout style;
+}
+
+/* Smooth image rendering */
+img {
+  content-visibility: auto;
+}
+
+/* Reduce paint areas on animated elements */
+.reveal {
+  will-change: opacity, transform;
+  contain: layout style;
+}
+
+/* Remove will-change after animation completes to free GPU memory */
+.reveal.revealed {
+  will-change: auto;
+}
+

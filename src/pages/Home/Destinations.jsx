@@ -38,6 +38,7 @@ export default function Destinations() {
                   alt={`${dest.name} in Dubai`} 
                   className="destinations__card-image"
                   loading="lazy"
+                  decoding="async"
                 />
                 <div className="destinations__card-image-overlay" />
                 <div className="destinations__card-image-badge">

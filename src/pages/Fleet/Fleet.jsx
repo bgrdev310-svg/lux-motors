@@ -455,6 +455,8 @@ export default function Fleet() {
               src={car.studioImage} 
               alt="" 
               className={`fleet-studio__bg-img fleet-studio__bg-img--${car.slug} ${activeIndex === idx ? 'fleet-studio__bg-img--active' : ''}`}
+              loading="lazy"
+              decoding="async"
             />
           ))}
           <div className="fleet-studio__bg-overlay" />

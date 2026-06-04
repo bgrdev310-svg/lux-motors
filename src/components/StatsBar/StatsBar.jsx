@@ -21,13 +21,13 @@ export default function StatsBar() {
   return (
     <div className="stats-bar glass">
       <div className="stats-bar__inner container">
-        <StatItem icon={Car} end={500} suffix="+" label="Luxury Cars" />
+        <StatItem icon={Car} end={30} suffix="+" label="Luxury Cars" />
         <div className="stats-bar__divider" />
         <StatItem icon={Clock} end={24} suffix="/7" label="Support" />
         <div className="stats-bar__divider" />
         <StatItem icon={MapPin} end={35} suffix="+" label="Locations" />
         <div className="stats-bar__divider" />
-        <StatItem icon={Users} end={10} suffix="K+" label="Happy Clients" />
+        <StatItem icon={Users} end={1} suffix="K+" label="Happy Clients" />
       </div>
     </div>
   );

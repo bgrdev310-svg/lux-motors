@@ -5,7 +5,7 @@ export default function CarCard({ car, index = 0 }) {
   return (
     <div className={`car-card reveal reveal-delay-${index + 1}`}>
       <div className="car-card__image-wrapper">
-        <img src={car.image} alt={car.name} className="car-card__image" loading="lazy" />
+        <img src={car.image} alt={car.name} className="car-card__image" loading="lazy" decoding="async" />
         <div className="car-card__overlay">
           <span className="car-card__category">{car.category}</span>
         </div>

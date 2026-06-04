@@ -1,7 +1,38 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import PublicLayout from './layouts/PublicLayout';
 import Home from './pages/Home/Home';
-import Fleet from './pages/Fleet/Fleet';
+
+// Lazy-load the Fleet page — it's heavy (1100+ lines, many large images)
+const Fleet = lazy(() => import('./pages/Fleet/Fleet'));
+
+// Minimal loading spinner for Suspense fallback
+function PageLoader() {
+  return (
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: '60vh',
+      color: 'rgba(255,255,255,0.5)',
+      fontFamily: 'var(--font-body)',
+      fontSize: '0.875rem',
+      letterSpacing: '2px',
+      textTransform: 'uppercase',
+    }}>
+      <div style={{
+        width: '24px',
+        height: '24px',
+        border: '2px solid rgba(201,168,76,0.2)',
+        borderTopColor: '#c9a84c',
+        borderRadius: '50%',
+        animation: 'spin 0.8s linear infinite',
+        marginRight: '12px',
+      }} />
+      Loading...
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
+  );
+}
 
 function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
@@ -46,7 +77,11 @@ function App() {
   // Simple path routing
   const renderPage = () => {
     if (currentPath.startsWith('/fleet')) {
-      return <Fleet />;
+      return (
+        <Suspense fallback={<PageLoader />}>
+          <Fleet />
+        </Suspense>
+      );
     }
     // Fallback/Home
     return <Home />;
@@ -60,4 +95,3 @@ function App() {
 }
 
 export default App;
-

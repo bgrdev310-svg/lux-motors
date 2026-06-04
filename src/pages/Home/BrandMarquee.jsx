@@ -41,6 +41,8 @@ export default function BrandMarquee() {
                     src={`https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/${brand.slug}.png`} 
                     alt={`${brand.name} logo`}
                     className="brand-logo-img"
+                    loading="lazy"
+                    decoding="async"
                     onError={(e) => {
                       // Fallback to text if the image fails to load
                       e.target.style.display = 'none';
@@ -69,6 +71,8 @@ export default function BrandMarquee() {
                   src={`https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/${activeBrand.slug}.png`} 
                   alt={`${activeBrand.name} logo`}
                   className="brand-detail-panel__logo-img"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
             </div>
