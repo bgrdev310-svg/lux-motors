@@ -7,6 +7,7 @@ import WhyChooseUs from './WhyChooseUs';
 import Testimonials from './Testimonials';
 import BrandMarquee from './BrandMarquee';
 import FAQ from './FAQ';
+import BlogSection from './BlogSection';
 import CTASection from './CTASection';
 import './Home.css';
 
@@ -22,6 +23,7 @@ export default function Home() {
       <WhyChooseUs />
       <Testimonials />
       <FAQ />
+      <BlogSection />
       <CTASection />
     </div>
   );

@@ -3,7 +3,7 @@ import { ArrowUpRight } from 'lucide-react';
 
 export default function CarCard({ car, index = 0 }) {
   return (
-    <div className={`car-card reveal reveal-delay-${index + 1}`}>
+    <a href={`/fleet/${car.slug}`} className={`car-card reveal reveal-delay-${index + 1}`}>
       <div className="car-card__image-wrapper">
         <img src={car.image} alt={car.name} className="car-card__image" loading="lazy" decoding="async" />
         <div className="car-card__overlay">
@@ -16,9 +16,9 @@ export default function CarCard({ car, index = 0 }) {
             <h3 className="car-card__name">{car.name}</h3>
             <span className="car-card__brand">{car.brand}</span>
           </div>
-          <a href={`/fleet/${car.slug}`} className="car-card__link" aria-label={`View ${car.name}`}>
+          <div className="car-card__link" aria-label={`View ${car.name}`}>
             <ArrowUpRight size={20} />
-          </a>
+          </div>
         </div>
         <div className="car-card__specs">
           <div className="car-card__spec">
@@ -41,6 +41,6 @@ export default function CarCard({ car, index = 0 }) {
           </div>
         </div>
       </div>
-    </div>
+    </a>
   );
 }

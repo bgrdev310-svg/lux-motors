@@ -1,8 +1,8 @@
-import heroCarImg from '../assets/images/hero-car.png';
-import ferrariImg from '../assets/images/car-ferrari.png';
-import rollsRoyceImg from '../assets/images/car-rollsroyce.png';
-import porscheImg from '../assets/images/car-porsche.png';
-import lamborghiniImg from '../assets/images/car-lamborghini.png';
+import heroCarImg from '../assets/images/hero-car.webp';
+import ferrariImg from '../assets/images/car-ferrari.webp';
+import rollsRoyceImg from '../assets/images/car-rollsroyce.webp';
+import porscheImg from '../assets/images/car-porsche.webp';
+import lamborghiniImg from '../assets/images/car-lamborghini.webp';
 
 export const heroCar = {
   name: 'Lamborghini Urus',

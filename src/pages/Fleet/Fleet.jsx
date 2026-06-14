@@ -1,182 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import './Fleet.css';
 import CarCard from '../../components/CarCard/CarCard';
-import { ArrowUpRight, Compass, Sparkles, Search, SlidersHorizontal, X, RotateCcw, ChevronDown, Check } from 'lucide-react';
+import { ArrowUpRight, Compass, Sparkles, Search, SlidersHorizontal, X, RotateCcw, ChevronDown, Check, Car, Users, Gauge, Zap, Fuel, Calendar, DollarSign, Wind } from 'lucide-react';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
+import { useFleetStore } from '../../hooks/useFleetStore';
 import { brands } from '../../data/brands';
-
-// Import local car assets directly for use in the interactive studio
-import lamborghiniImg from '../../assets/images/car-lamborghini.png';
-import ferrariImg from '../../assets/images/car-ferrari.png';
-import rollsRoyceImg from '../../assets/images/car-rollsroyce.png';
-import porscheImg from '../../assets/images/car-porsche.png';
-import urusImg from '../../assets/images/hero-car.png';
-
-// Import generated full-width studio background images
-import studioLamborghiniImg from '../../assets/images/studio-lamborghini.png';
-import studioFerrariImg from '../../assets/images/studio-ferrari.png';
-import studioRollsRoyceImg from '../../assets/images/studio-rollsroyce.png';
-import studioPorscheImg from '../../assets/images/studio-porsche.png';
-import studioUrusImg from '../../assets/images/studio-urus.png';
-
-// Setup detailed data model for the premium interactive studio
-const studioCars = [
-  {
-    id: 1,
-    name: 'Lamborghini Aventador SVJ',
-    tagline: 'The Pinnacle of V12 Raw Performance',
-    brand: 'LAMBORGHINI',
-    category: 'SuperSport',
-    image: lamborghiniImg,
-    studioImage: studioLamborghiniImg,
-    price: 5000,
-    currency: 'AED',
-    period: 'day',
-    themeColor: '#ffd700', // Gold/yellow glow
-    themeRgb: '201, 168, 76', // For RGBA opacity
-    gearbox: '7-Speed ISR Automatic',
-    year: '2023',
-    specs: {
-      power: 770,
-      powerUnit: 'HP',
-      acceleration: 2.8,
-      accelerationUnit: 's',
-      topSpeed: 350,
-      topSpeedUnit: 'km/h',
-      engine: '6.5L V12'
-    },
-    hotspots: [
-      { x: 30, y: 55, title: 'Naturally Aspirated V12', desc: '6.5-liter engine delivering 770 hp at 8,500 rpm with a spine-tingling exhaust note.' },
-      { x: 65, y: 70, title: 'Carbon Ceramic Brakes', desc: '400mm front discs with 6-piston calipers, stopping from 100-0 km/h in just 30 meters.' },
-      { x: 80, y: 40, title: 'ALA 2.0 Aerodynamics', desc: 'Active aero flaps on the front splitter and rear wing adjust in 500ms for optimal downforce.' }
-    ],
-    slug: 'lamborghini-aventador'
-  },
-  {
-    id: 2,
-    name: 'Ferrari 488 GTB',
-    tagline: 'Exquisite Balance of Power and Control',
-    brand: 'FERRARI',
-    category: 'Sport',
-    image: ferrariImg,
-    studioImage: studioFerrariImg,
-    price: 4000,
-    currency: 'AED',
-    period: 'day',
-    themeColor: '#ff2800', // Ferrari Red
-    themeRgb: '239, 68, 68',
-    gearbox: '7-Speed F1 Dual-Clutch',
-    year: '2022',
-    specs: {
-      power: 670,
-      powerUnit: 'HP',
-      acceleration: 3.0,
-      accelerationUnit: 's',
-      topSpeed: 330,
-      topSpeedUnit: 'km/h',
-      engine: '3.9L Twin-Turbo V8'
-    },
-    hotspots: [
-      { x: 50, y: 35, title: 'Twin-Turbo V8', desc: 'Mid-rear mounted V8 delivering zero turbo lag and a rich, harmonic Ferrari sound.' },
-      { x: 22, y: 62, title: 'Forged Rims', desc: 'Ultra-light forged wheels reducing unsprung mass for blistering cornering response.' },
-      { x: 85, y: 55, title: 'Slip Angle Control', desc: 'Advanced active differential that calculates slip angle to maximize exit speed.' }
-    ],
-    slug: 'ferrari-488-gtb'
-  },
-  {
-    id: 3,
-    name: 'Rolls-Royce Ghost',
-    tagline: 'The Pinnacle of Quiet Luxury and Serenity',
-    brand: 'ROLLS-ROYCE',
-    category: 'Luxury',
-    image: rollsRoyceImg,
-    studioImage: studioRollsRoyceImg,
-    price: 4500,
-    currency: 'AED',
-    period: 'day',
-    themeColor: '#8a2be2', // Deep Purple
-    themeRgb: '139, 92, 246',
-    gearbox: '8-Speed Automatic',
-    year: '2023',
-    specs: {
-      power: 571,
-      powerUnit: 'HP',
-      acceleration: 4.8,
-      accelerationUnit: 's',
-      topSpeed: 250,
-      topSpeedUnit: 'km/h',
-      engine: '6.75L Twin-Turbo V12'
-    },
-    hotspots: [
-      { x: 20, y: 50, title: 'Pantheon Grille', desc: 'Subtly illuminated chrome structure flanked by advanced laser headlights with 600m range.' },
-      { x: 45, y: 40, title: 'Planar Suspension', desc: 'Continuously variable dampers and upper-wishbone dampening for a true "magic carpet ride".' },
-      { x: 75, y: 35, title: 'Starlight Headliner', desc: '1,500 individual fiber optic stars hand-woven into the black leather ceiling.' }
-    ],
-    slug: 'rolls-royce-ghost'
-  },
-  {
-    id: 4,
-    name: 'Porsche 911 GT3',
-    tagline: 'Born on the Track. Built for the Road.',
-    brand: 'PORSCHE',
-    category: 'Sport',
-    image: porscheImg,
-    studioImage: studioPorscheImg,
-    price: 3000,
-    currency: 'AED',
-    period: 'day',
-    themeColor: '#00f2fe', // Cool Cyan
-    themeRgb: '6, 182, 212',
-    gearbox: '7-Speed PDK Automatic',
-    year: '2023',
-    specs: {
-      power: 502,
-      powerUnit: 'HP',
-      acceleration: 3.4,
-      accelerationUnit: 's',
-      topSpeed: 318,
-      topSpeedUnit: 'km/h',
-      engine: '4.0L Flat-6 Boxer'
-    },
-    hotspots: [
-      { x: 80, y: 30, title: 'Swan-Neck Rear Wing', desc: 'Suspended mount design generating 150% more downforce than the previous GT3 model.' },
-      { x: 28, y: 50, title: 'Dual-Vent Hood', desc: 'Lightweight carbon-fiber hood venting hot air to maintain aerodynamic stability.' },
-      { x: 68, y: 72, title: 'Rear-Wheel Steering', desc: 'Electromechanical steering that turns rear wheels up to 2 degrees for high-speed stability.' }
-    ],
-    slug: 'porsche-911-gt3'
-  },
-  {
-    id: 5,
-    name: 'Lamborghini Urus Performante',
-    tagline: 'The Ultimate Super Sports SUV',
-    brand: 'LAMBORGHINI',
-    category: 'SUV',
-    image: urusImg,
-    studioImage: studioUrusImg,
-    price: 3500,
-    currency: 'AED',
-    period: 'day',
-    themeColor: '#10b981', // Green/emerald
-    themeRgb: '16, 185, 129',
-    gearbox: '8-Speed Automatic',
-    year: '2024',
-    specs: {
-      power: 666,
-      powerUnit: 'HP',
-      acceleration: 3.6,
-      accelerationUnit: 's',
-      topSpeed: 305,
-      topSpeedUnit: 'km/h',
-      engine: '4.0L Twin-Turbo V8'
-    },
-    hotspots: [
-      { x: 30, y: 48, title: 'Twin-Turbo V8 Power', desc: 'Unleashing 666 horsepower and 850 Nm of torque, pushing from 0-100 km/h in a supercar-like 3.6s.' },
-      { x: 70, y: 55, title: 'Carbon Aero Roof', desc: 'Performante exclusive lightweight visible carbon fiber roof lowering the center of gravity.' },
-      { x: 48, y: 72, title: 'Akrapovič Exhaust', desc: 'Titanium sport exhaust system producing a deep, resonant growl in Corsa track mode.' }
-    ],
-    slug: 'lamborghini-urus'
-  }
-];
 
 // Helper Custom Hook to perform count-up animations on number changes
 function useCountUp(target, duration = 800) {
@@ -235,9 +63,11 @@ function DynamicStat({ value, unit }) {
 }
 
 export default function Fleet() {
+  const { cars: fleetCars } = useFleetStore();
+  const studioCars = useMemo(() => fleetCars.filter((c) => c.visible !== false), [fleetCars]);
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeCategory, setActiveCategory] = useState('All');
-  const [activeHotspot, setActiveHotspot] = useState(null);
   const [parallax, setParallax] = useState({ x: 0, y: 0 });
   const [showMobileDrawer, setShowMobileDrawer] = useState(false);
 
@@ -261,11 +91,9 @@ export default function Fleet() {
       if (diff > 0) {
         // Swipe left -> Next car
         setActiveIndex((prev) => (prev + 1) % studioCars.length);
-        setActiveHotspot(null);
       } else {
         // Swipe right -> Previous car
         setActiveIndex((prev) => (prev - 1 + studioCars.length) % studioCars.length);
-        setActiveHotspot(null);
       }
     }
   };
@@ -274,12 +102,15 @@ export default function Fleet() {
   // Advanced Search & Filter States
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBrands, setSelectedBrands] = useState([]);
-  const [minPrice, setMinPrice] = useState(2500);
-  const [maxPrice, setMaxPrice] = useState(6000);
-  const [minPower, setMinPower] = useState(500);
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+  const [minPower, setMinPower] = useState(0);
   const [selectedGearbox, setSelectedGearbox] = useState('All');
   const [selectedEngine, setSelectedEngine] = useState('All');
   const [selectedYear, setSelectedYear] = useState('All');
+  const [selectedSeats, setSelectedSeats] = useState('All');
+  const [selectedDriveType, setSelectedDriveType] = useState('All');
+  const [selectedFuel, setSelectedFuel] = useState('All');
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   // Dropdown open states
@@ -287,16 +118,27 @@ export default function Fleet() {
   const [gearboxDropdownOpen, setGearboxDropdownOpen] = useState(false);
   const [engineDropdownOpen, setEngineDropdownOpen] = useState(false);
   const [yearDropdownOpen, setYearDropdownOpen] = useState(false);
+  const [seatsDropdownOpen, setSeatsDropdownOpen] = useState(false);
+  const [driveTypeDropdownOpen, setDriveTypeDropdownOpen] = useState(false);
+  const [fuelDropdownOpen, setFuelDropdownOpen] = useState(false);
 
   // Dropdown refs for click-outside detection
   const brandRef = useRef(null);
   const gearboxRef = useRef(null);
   const engineRef = useRef(null);
   const yearRef = useRef(null);
-
+  const seatsRef = useRef(null);
+  const driveTypeRef = useRef(null);
+  const fuelRef = useRef(null);
   const studioRef = useRef(null);
 
-  // Click outside dropdowns listener
+  useEffect(() => {
+    if (studioCars.length === 0) return;
+    if (activeIndex >= studioCars.length) {
+      setActiveIndex(0);
+    }
+  }, [studioCars.length, activeIndex]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (brandRef.current && !brandRef.current.contains(event.target)) {
@@ -311,12 +153,102 @@ export default function Fleet() {
       if (yearRef.current && !yearRef.current.contains(event.target)) {
         setYearDropdownOpen(false);
       }
+      if (seatsRef.current && !seatsRef.current.contains(event.target)) {
+        setSeatsDropdownOpen(false);
+      }
+      if (driveTypeRef.current && !driveTypeRef.current.contains(event.target)) {
+        setDriveTypeDropdownOpen(false);
+      }
+      if (fuelRef.current && !fuelRef.current.contains(event.target)) {
+        setFuelDropdownOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  // Compute Dynamic Filtering Options from studioCars
+  const dynamicCategories = useMemo(() => {
+    const cats = new Set(studioCars.map((car) => car.category).filter(Boolean));
+    return ['All', ...Array.from(cats)];
+  }, [studioCars]);
+
+  const availableBrands = useMemo(() => {
+    return new Set(studioCars.map((car) => car.brand.toUpperCase()));
+  }, [studioCars]);
+
+  const allFilterBrands = useMemo(() => {
+    const list = [...brands];
+    const predefinedUpper = new Set(brands.map(b => b.name.toUpperCase()));
+    availableBrands.forEach(b => {
+      if (!predefinedUpper.has(b)) {
+        list.push({
+          name: b.charAt(0) + b.slice(1).toLowerCase(),
+          slug: b.toLowerCase(),
+          logoSlug: b.toLowerCase()
+        });
+      }
+    });
+    return list;
+  }, [availableBrands]);
+
+  const priceRangeLimit = useMemo(() => {
+    if (studioCars.length === 0) return { min: 0, max: 10000 };
+    const prices = studioCars.map((car) => car.price).filter((p) => typeof p === 'number' && !isNaN(p));
+    if (prices.length === 0) return { min: 0, max: 10000 };
+    return {
+      min: Math.min(...prices),
+      max: Math.max(...prices)
+    };
+  }, [studioCars]);
+
+  const powerRangeLimit = useMemo(() => {
+    if (studioCars.length === 0) return { min: 0, max: 1000 };
+    const powers = studioCars.map((car) => parseInt(car.specs?.power || car.power)).filter((p) => typeof p === 'number' && !isNaN(p));
+    if (powers.length === 0) return { min: 0, max: 1000 };
+    return {
+      min: Math.min(...powers),
+      max: Math.max(...powers)
+    };
+  }, [studioCars]);
+
+  const dynamicYears = useMemo(() => {
+    const years = new Set(studioCars.map((car) => String(car.year)).filter(Boolean));
+    return ['All', ...Array.from(years).sort((a, b) => b.localeCompare(a))];
+  }, [studioCars]);
+
+  const dynamicEngineConfigs = useMemo(() => {
+    const configs = new Set();
+    studioCars.forEach(car => {
+      const engineText = car.specs?.engine || '';
+      const match = engineText.match(/(V12|V8|V6|Flat-6|Flat-4|Electric|L4|I4|W16)/i);
+      if (match) {
+        configs.add(match[1]);
+      } else if (engineText.trim()) {
+        const cleanText = engineText.split(' ').pop();
+        if (cleanText && cleanText.length < 10) configs.add(cleanText);
+      }
+    });
+    return ['All', ...Array.from(configs).sort()];
+  }, [studioCars]);
+
+  const dynamicSeatsOptions = useMemo(() => {
+    const seatsSet = new Set(studioCars.map((car) => car.detailSpecs?.seats || car.seats || '').filter(Boolean));
+    return ['All', ...Array.from(seatsSet).sort()];
+  }, [studioCars]);
+
+  const dynamicDriveTypes = useMemo(() => {
+    const drivesSet = new Set(studioCars.map((car) => car.detailSpecs?.driveType || car.driveType || '').filter(Boolean));
+    return ['All', ...Array.from(drivesSet).sort()];
+  }, [studioCars]);
+
+  const dynamicFuels = useMemo(() => {
+    const fuelsSet = new Set(studioCars.map((car) => car.detailSpecs?.fuel || car.fuel || '').filter(Boolean));
+    return ['All', ...Array.from(fuelsSet).sort()];
+  }, [studioCars]);
+
   const gridSectionRef = useScrollReveal({}, [
     activeCategory,
     searchTerm,
@@ -326,10 +258,21 @@ export default function Fleet() {
     minPower,
     selectedGearbox,
     selectedEngine,
-    selectedYear
+    selectedYear,
+    selectedSeats,
+    selectedDriveType,
+    selectedFuel
   ]);
 
-  const activeCar = studioCars[activeIndex];
+  const activeCar = studioCars[activeIndex] || studioCars[0];
+
+  if (!activeCar) {
+    return (
+      <div className="fleet-page" style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: 'var(--text-muted)' }}>No vehicles in fleet. Check back soon.</p>
+      </div>
+    );
+  }
 
   // Parallax tilt effect on mouse movement
   const handleMouseMove = (e) => {
@@ -347,25 +290,19 @@ export default function Fleet() {
     setParallax({ x: 0, y: 0 });
   };
 
-  // Close hotspots on clicking elsewhere
-  useEffect(() => {
-    const handleOutsideClick = () => {
-      setActiveHotspot(null);
-    };
-    document.addEventListener('click', handleOutsideClick);
-    return () => document.removeEventListener('click', handleOutsideClick);
-  }, []);
-
   // Reset Filters Function
   const resetFilters = () => {
     setSearchTerm('');
     setSelectedBrands([]);
-    setMinPrice(2500);
-    setMaxPrice(6000);
-    setMinPower(500);
+    setMinPrice('');
+    setMaxPrice('');
+    setMinPower(0);
     setSelectedGearbox('All');
     setSelectedEngine('All');
     setSelectedYear('All');
+    setSelectedSeats('All');
+    setSelectedDriveType('All');
+    setSelectedFuel('All');
     setActiveCategory('All');
   };
 
@@ -384,10 +321,13 @@ export default function Fleet() {
       year: car.year,
       gearbox: car.gearbox,
       specs: {
-        power: `${car.specs.power} HP`,
-        acceleration: `${car.specs.acceleration}s`,
-        engine: car.specs.engine
+        power: `${car.specs?.power || car.power} HP`,
+        acceleration: `${car.specs?.acceleration || car.acceleration}s`,
+        engine: car.specs?.engine || car.engine || ''
       },
+      seats: car.detailSpecs?.seats || car.seats || '',
+      driveType: car.detailSpecs?.driveType || car.driveType || '',
+      fuel: car.detailSpecs?.fuel || car.fuel || '',
       slug: car.slug
     };
   }).filter(car => {
@@ -404,12 +344,15 @@ export default function Fleet() {
       return false;
     }
     // 4. Price check
-    if (car.price < minPrice || car.price > maxPrice) {
+    if (minPrice !== '' && car.price < Number(minPrice)) {
+      return false;
+    }
+    if (maxPrice !== '' && car.price > Number(maxPrice)) {
       return false;
     }
     // 5. Horsepower check
     const hpValue = parseInt(car.specs.power);
-    if (hpValue < minPower) {
+    if (minPower > 0 && !isNaN(hpValue) && hpValue < minPower) {
       return false;
     }
     // 6. Gearbox check
@@ -426,7 +369,19 @@ export default function Fleet() {
       return false;
     }
     // 8. Year check
-    if (selectedYear !== 'All' && car.year !== selectedYear) {
+    if (selectedYear !== 'All' && String(car.year) !== String(selectedYear)) {
+      return false;
+    }
+    // 9. Seats check
+    if (selectedSeats !== 'All' && car.seats !== selectedSeats) {
+      return false;
+    }
+    // 10. Drive Type check
+    if (selectedDriveType !== 'All' && car.driveType !== selectedDriveType) {
+      return false;
+    }
+    // 11. Fuel check
+    if (selectedFuel !== 'All' && car.fuel !== selectedFuel) {
       return false;
     }
     return true;
@@ -562,32 +517,7 @@ export default function Fleet() {
               </div>
             </div>
 
-            {/* Showcase Stage Wrapper (Hotspots Overlay) */}
-            <div 
-              className={`fleet-studio__car-container fleet-studio__car-container--${activeCar.slug}`}
-              style={{
-                transform: `translate(${parallax.x}px, ${parallax.y}px)`
-              }}
-            >
-              {/* Hotspot details points */}
-              {activeCar.hotspots.map((hotspot, idx) => (
-                <div 
-                  key={`hotspot-${activeCar.id}-${idx}`}
-                  className={`fleet-studio__hotspot ${activeHotspot === idx ? 'fleet-studio__hotspot--active' : ''}`}
-                  style={{ left: `${hotspot.x}%`, top: `${hotspot.y}%` }}
-                  onClick={(e) => {
-                    e.stopPropagation(); // prevent closing immediately
-                    setActiveHotspot(activeHotspot === idx ? null : idx);
-                  }}
-                >
-                  <div className="fleet-studio__hotspot-trigger" />
-                  <div className="fleet-studio__tooltip">
-                    <h4 className="fleet-studio__tooltip-title">{hotspot.title}</h4>
-                    <p className="fleet-studio__tooltip-desc">{hotspot.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+
 
             {/* Mobile-Only Pagination Dots */}
             <div className="fleet-studio__mobile-dots">
@@ -596,7 +526,6 @@ export default function Fleet() {
                   key={`dot-${idx}`}
                   onClick={() => {
                     setActiveIndex(idx);
-                    setActiveHotspot(null);
                   }}
                   className={`fleet-studio__mobile-dot ${activeIndex === idx ? 'fleet-studio__mobile-dot--active' : ''}`}
                   aria-label={`Select Car ${idx + 1}`}
@@ -645,7 +574,6 @@ export default function Fleet() {
                 key={`selector-thumb-${car.id}`}
                 onClick={() => {
                   setActiveIndex(idx);
-                  setActiveHotspot(null); // close open tooltips
                 }}
                 className={`fleet-studio__thumb ${activeIndex === idx ? 'fleet-studio__thumb--active' : ''}`}
               >
@@ -706,7 +634,7 @@ export default function Fleet() {
 
             {/* Category Select Buttons (Quick Filters) */}
             <div className="fleet-filters">
-              {['All', 'Sport', 'SuperSport', 'Luxury', 'SUV'].map((category) => (
+              {dynamicCategories.map((category) => (
                 <button
                   key={`filter-${category}`}
                   onClick={() => setActiveCategory(category)}
@@ -749,7 +677,9 @@ export default function Fleet() {
               <div className="fleet-advanced-grid">
                 {/* Brand Selector Custom Dropdown */}
                 <div className="fleet-filter-group" ref={brandRef}>
-                  <label className="fleet-filter-label">Brands</label>
+                  <label className="fleet-filter-label">
+                    <Car size={12} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '4px' }} /> Brands
+                  </label>
                   <div className="fleet-dropdown">
                     <button
                       type="button"
@@ -781,10 +711,10 @@ export default function Fleet() {
                           )}
                         </div>
                         <div className="fleet-brand-dropdown__grid">
-                          {brands.map((brand) => {
+                          {allFilterBrands.map((brand) => {
                             const brandUpper = brand.name.toUpperCase();
                             const isChecked = selectedBrands.includes(brandUpper);
-                            const isAvailable = ['LAMBORGHINI', 'FERRARI', 'ROLLS-ROYCE', 'PORSCHE'].includes(brandUpper);
+                            const isAvailable = availableBrands.has(brandUpper);
                             
                             return (
                               <button
@@ -834,26 +764,26 @@ export default function Fleet() {
 
                 {/* Price Filter range */}
                 <div className="fleet-filter-group">
-                  <label className="fleet-filter-label">Daily Price Range (AED)</label>
+                  <label className="fleet-filter-label">
+                    <DollarSign size={12} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '4px' }} /> Price / Day (AED)
+                  </label>
                   <div className="fleet-price-inputs">
                     <div>
                       <span className="fleet-price-prefix">Min</span>
                       <input
                         type="number"
-                        min="2500"
-                        max="6000"
+                        placeholder={priceRangeLimit.min}
                         value={minPrice}
-                        onChange={(e) => setMinPrice(Math.max(2500, Number(e.target.value)))}
+                        onChange={(e) => setMinPrice(e.target.value)}
                       />
                     </div>
                     <div>
                       <span className="fleet-price-prefix">Max</span>
                       <input
                         type="number"
-                        min="2500"
-                        max="6000"
+                        placeholder={priceRangeLimit.max}
                         value={maxPrice}
-                        onChange={(e) => setMaxPrice(Math.min(6000, Number(e.target.value)))}
+                        onChange={(e) => setMaxPrice(e.target.value)}
                       />
                     </div>
                   </div>
@@ -861,7 +791,9 @@ export default function Fleet() {
 
                 {/* Custom Gearbox Select */}
                 <div className="fleet-filter-group" ref={gearboxRef}>
-                  <label className="fleet-filter-label">Transmission (Gearbox)</label>
+                  <label className="fleet-filter-label">
+                    <Wind size={12} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '4px' }} /> Transmission
+                  </label>
                   <div className="fleet-dropdown">
                     <button
                       type="button"
@@ -905,7 +837,9 @@ export default function Fleet() {
 
                 {/* Custom Engine Select */}
                 <div className="fleet-filter-group" ref={engineRef}>
-                  <label className="fleet-filter-label">Engine Config</label>
+                  <label className="fleet-filter-label">
+                    <Gauge size={12} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '4px' }} /> Engine Config
+                  </label>
                   <div className="fleet-dropdown">
                     <button
                       type="button"
@@ -915,30 +849,36 @@ export default function Fleet() {
                       <span>
                         {selectedEngine === 'All' 
                           ? 'All Configurations' 
-                          : `${selectedEngine} Engine`}
+                          : `${selectedEngine}`}
                       </span>
                       <ChevronDown size={14} className="fleet-dropdown__chevron" />
                     </button>
                     
                     {engineDropdownOpen && (
                       <div className="fleet-dropdown__menu">
-                        {[
-                          { value: 'All', label: 'All Configurations' },
-                          { value: 'V12', label: 'V12 Engine' },
-                          { value: 'V8', label: 'V8 Engine' },
-                          { value: 'Flat-6', label: 'Flat-6 Engine' }
-                        ].map((opt) => (
+                        <button
+                          type="button"
+                          className={`fleet-dropdown__option ${selectedEngine === 'All' ? 'fleet-dropdown__option--selected' : ''}`}
+                          onClick={() => {
+                            setSelectedEngine('All');
+                            setEngineDropdownOpen(false);
+                          }}
+                        >
+                          <span>All Configurations</span>
+                          {selectedEngine === 'All' && <Check size={12} className="fleet-dropdown__check" />}
+                        </button>
+                        {dynamicEngineConfigs.filter(opt => opt !== 'All').map((opt) => (
                           <button
-                            key={opt.value}
+                            key={opt}
                             type="button"
-                            className={`fleet-dropdown__option ${selectedEngine === opt.value ? 'fleet-dropdown__option--selected' : ''}`}
+                            className={`fleet-dropdown__option ${selectedEngine === opt ? 'fleet-dropdown__option--selected' : ''}`}
                             onClick={() => {
-                              setSelectedEngine(opt.value);
+                              setSelectedEngine(opt);
                               setEngineDropdownOpen(false);
                             }}
                           >
-                            <span>{opt.label}</span>
-                            {selectedEngine === opt.value && <Check size={12} className="fleet-dropdown__check" />}
+                            <span>{opt} Engine</span>
+                            {selectedEngine === opt && <Check size={12} className="fleet-dropdown__check" />}
                           </button>
                         ))}
                       </div>
@@ -948,7 +888,9 @@ export default function Fleet() {
 
                 {/* Custom Year Select */}
                 <div className="fleet-filter-group" ref={yearRef}>
-                  <label className="fleet-filter-label">Year Model</label>
+                  <label className="fleet-filter-label">
+                    <Calendar size={12} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '4px' }} /> Year Model
+                  </label>
                   <div className="fleet-dropdown">
                     <button
                       type="button"
@@ -965,23 +907,182 @@ export default function Fleet() {
                     
                     {yearDropdownOpen && (
                       <div className="fleet-dropdown__menu">
-                        {[
-                          { value: 'All', label: 'All Years' },
-                          { value: '2024', label: '2024' },
-                          { value: '2023', label: '2023' },
-                          { value: '2022', label: '2022' }
-                        ].map((opt) => (
+                        <button
+                          type="button"
+                          className={`fleet-dropdown__option ${selectedYear === 'All' ? 'fleet-dropdown__option--selected' : ''}`}
+                          onClick={() => {
+                            setSelectedYear('All');
+                            setYearDropdownOpen(false);
+                          }}
+                        >
+                          <span>All Years</span>
+                          {selectedYear === 'All' && <Check size={12} className="fleet-dropdown__check" />}
+                        </button>
+                        {dynamicYears.filter(opt => opt !== 'All').map((opt) => (
                           <button
-                            key={opt.value}
+                            key={opt}
                             type="button"
-                            className={`fleet-dropdown__option ${selectedYear === opt.value ? 'fleet-dropdown__option--selected' : ''}`}
+                            className={`fleet-dropdown__option ${selectedYear === opt ? 'fleet-dropdown__option--selected' : ''}`}
                             onClick={() => {
-                              setSelectedYear(opt.value);
+                              setSelectedYear(opt);
                               setYearDropdownOpen(false);
                             }}
                           >
-                            <span>{opt.label}</span>
-                            {selectedYear === opt.value && <Check size={12} className="fleet-dropdown__check" />}
+                            <span>{opt}</span>
+                            {selectedYear === opt && <Check size={12} className="fleet-dropdown__check" />}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Custom Seats Select */}
+                <div className="fleet-filter-group" ref={seatsRef}>
+                  <label className="fleet-filter-label">
+                    <Users size={12} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '4px' }} /> Seats
+                  </label>
+                  <div className="fleet-dropdown">
+                    <button
+                      type="button"
+                      className={`fleet-dropdown__trigger ${seatsDropdownOpen ? 'fleet-dropdown__trigger--active' : ''}`}
+                      onClick={() => setSeatsDropdownOpen(!seatsDropdownOpen)}
+                    >
+                      <span>
+                        {selectedSeats === 'All' 
+                          ? 'All Seats' 
+                          : selectedSeats}
+                      </span>
+                      <ChevronDown size={14} className="fleet-dropdown__chevron" />
+                    </button>
+                    
+                    {seatsDropdownOpen && (
+                      <div className="fleet-dropdown__menu">
+                        <button
+                          type="button"
+                          className={`fleet-dropdown__option ${selectedSeats === 'All' ? 'fleet-dropdown__option--selected' : ''}`}
+                          onClick={() => {
+                            setSelectedSeats('All');
+                            setSeatsDropdownOpen(false);
+                          }}
+                        >
+                          <span>All Seats</span>
+                          {selectedSeats === 'All' && <Check size={12} className="fleet-dropdown__check" />}
+                        </button>
+                        {dynamicSeatsOptions.filter(opt => opt !== 'All').map((opt) => (
+                          <button
+                            key={opt}
+                            type="button"
+                            className={`fleet-dropdown__option ${selectedSeats === opt ? 'fleet-dropdown__option--selected' : ''}`}
+                            onClick={() => {
+                              setSelectedSeats(opt);
+                              setSeatsDropdownOpen(false);
+                            }}
+                          >
+                            <span>{opt}</span>
+                            {selectedSeats === opt && <Check size={12} className="fleet-dropdown__check" />}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Custom Drive Type Select */}
+                <div className="fleet-filter-group" ref={driveTypeRef}>
+                  <label className="fleet-filter-label">
+                    <Compass size={12} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '4px' }} /> Drive Type
+                  </label>
+                  <div className="fleet-dropdown">
+                    <button
+                      type="button"
+                      className={`fleet-dropdown__trigger ${driveTypeDropdownOpen ? 'fleet-dropdown__trigger--active' : ''}`}
+                      onClick={() => setDriveTypeDropdownOpen(!driveTypeDropdownOpen)}
+                    >
+                      <span>
+                        {selectedDriveType === 'All' 
+                          ? 'All Drive Types' 
+                          : selectedDriveType}
+                      </span>
+                      <ChevronDown size={14} className="fleet-dropdown__chevron" />
+                    </button>
+                    
+                    {driveTypeDropdownOpen && (
+                      <div className="fleet-dropdown__menu">
+                        <button
+                          type="button"
+                          className={`fleet-dropdown__option ${selectedDriveType === 'All' ? 'fleet-dropdown__option--selected' : ''}`}
+                          onClick={() => {
+                            setSelectedDriveType('All');
+                            setDriveTypeDropdownOpen(false);
+                          }}
+                        >
+                          <span>All Drive Types</span>
+                          {selectedDriveType === 'All' && <Check size={12} className="fleet-dropdown__check" />}
+                        </button>
+                        {dynamicDriveTypes.filter(opt => opt !== 'All').map((opt) => (
+                          <button
+                            key={opt}
+                            type="button"
+                            className={`fleet-dropdown__option ${selectedDriveType === opt ? 'fleet-dropdown__option--selected' : ''}`}
+                            onClick={() => {
+                              setSelectedDriveType(opt);
+                              setDriveTypeDropdownOpen(false);
+                            }}
+                          >
+                            <span>{opt}</span>
+                            {selectedDriveType === opt && <Check size={12} className="fleet-dropdown__check" />}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Custom Fuel Type Select */}
+                <div className="fleet-filter-group" ref={fuelRef}>
+                  <label className="fleet-filter-label">
+                    <Fuel size={12} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '4px' }} /> Fuel Type
+                  </label>
+                  <div className="fleet-dropdown">
+                    <button
+                      type="button"
+                      className={`fleet-dropdown__trigger ${fuelDropdownOpen ? 'fleet-dropdown__trigger--active' : ''}`}
+                      onClick={() => setFuelDropdownOpen(!fuelDropdownOpen)}
+                    >
+                      <span>
+                        {selectedFuel === 'All' 
+                          ? 'All Fuel Types' 
+                          : selectedFuel}
+                      </span>
+                      <ChevronDown size={14} className="fleet-dropdown__chevron" />
+                    </button>
+                    
+                    {fuelDropdownOpen && (
+                      <div className="fleet-dropdown__menu">
+                        <button
+                          type="button"
+                          className={`fleet-dropdown__option ${selectedFuel === 'All' ? 'fleet-dropdown__option--selected' : ''}`}
+                          onClick={() => {
+                            setSelectedFuel('All');
+                            setFuelDropdownOpen(false);
+                          }}
+                        >
+                          <span>All Fuel Types</span>
+                          {selectedFuel === 'All' && <Check size={12} className="fleet-dropdown__check" />}
+                        </button>
+                        {dynamicFuels.filter(opt => opt !== 'All').map((opt) => (
+                          <button
+                            key={opt}
+                            type="button"
+                            className={`fleet-dropdown__option ${selectedFuel === opt ? 'fleet-dropdown__option--selected' : ''}`}
+                            onClick={() => {
+                              setSelectedFuel(opt);
+                              setFuelDropdownOpen(false);
+                            }}
+                          >
+                            <span>{opt}</span>
+                            {selectedFuel === opt && <Check size={12} className="fleet-dropdown__check" />}
                           </button>
                         ))}
                       </div>
@@ -991,19 +1092,21 @@ export default function Fleet() {
 
                 {/* Min Horsepower Slider */}
                 <div className="fleet-filter-group">
-                  <label className="fleet-filter-label">Min Power: {minPower} HP</label>
+                  <label className="fleet-filter-label">
+                    <Zap size={12} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '4px' }} /> Min Power: {minPower > 0 ? `${minPower} HP` : 'Any'}
+                  </label>
                   <input
                     type="range"
-                    min="500"
-                    max="800"
+                    min={powerRangeLimit.min}
+                    max={powerRangeLimit.max}
                     step="10"
-                    value={minPower}
+                    value={minPower || powerRangeLimit.min}
                     onChange={(e) => setMinPower(Number(e.target.value))}
                     className="fleet-filter-slider"
                   />
                   <div className="fleet-slider-labels">
-                    <span>500 HP</span>
-                    <span>800 HP</span>
+                    <span>{powerRangeLimit.min} HP</span>
+                    <span>{powerRangeLimit.max} HP</span>
                   </div>
                 </div>
               </div>
@@ -1021,12 +1124,15 @@ export default function Fleet() {
             {(searchTerm ||
               activeCategory !== 'All' ||
               selectedBrands.length > 0 ||
-              minPrice > 2500 ||
-              maxPrice < 6000 ||
-              minPower > 500 ||
+              minPrice !== '' ||
+              maxPrice !== '' ||
+              minPower > 0 ||
               selectedGearbox !== 'All' ||
               selectedEngine !== 'All' ||
-              selectedYear !== 'All') && (
+              selectedYear !== 'All' ||
+              selectedSeats !== 'All' ||
+              selectedDriveType !== 'All' ||
+              selectedFuel !== 'All') && (
               <div className="fleet-active-filters">
                 <span className="fleet-active-filters-label">Active:</span>
                 <div className="fleet-active-filters-list">
@@ -1052,16 +1158,16 @@ export default function Fleet() {
                       </span>
                     );
                   })}
-                  {(minPrice > 2500 || maxPrice < 6000) && (
+                  {(minPrice !== '' || maxPrice !== '') && (
                     <span className="fleet-filter-tag">
-                      Price: {minPrice}-{maxPrice} AED
-                      <button onClick={() => { setMinPrice(2500); setMaxPrice(6000); }}><X size={12} /></button>
+                      Price: {minPrice || 'Min'}-{maxPrice || 'Max'} AED
+                      <button onClick={() => { setMinPrice(''); setMaxPrice(''); }}><X size={12} /></button>
                     </span>
                   )}
-                  {minPower > 500 && (
+                  {minPower > 0 && (
                     <span className="fleet-filter-tag">
                       Power: &gt;={minPower} HP
-                      <button onClick={() => setMinPower(500)}><X size={12} /></button>
+                      <button onClick={() => setMinPower(0)}><X size={12} /></button>
                     </span>
                   )}
                   {selectedGearbox !== 'All' && (
@@ -1082,6 +1188,24 @@ export default function Fleet() {
                       <button onClick={() => setSelectedYear('All')}><X size={12} /></button>
                     </span>
                   )}
+                  {selectedSeats !== 'All' && (
+                    <span className="fleet-filter-tag">
+                      Seats: {selectedSeats}
+                      <button onClick={() => setSelectedSeats('All')}><X size={12} /></button>
+                    </span>
+                  )}
+                  {selectedDriveType !== 'All' && (
+                    <span className="fleet-filter-tag">
+                      Drive: {selectedDriveType}
+                      <button onClick={() => setSelectedDriveType('All')}><X size={12} /></button>
+                    </span>
+                  )}
+                  {selectedFuel !== 'All' && (
+                    <span className="fleet-filter-tag">
+                      Fuel: {selectedFuel}
+                      <button onClick={() => setSelectedFuel('All')}><X size={12} /></button>
+                    </span>
+                  )}
                   <button className="fleet-clear-all-tag" onClick={resetFilters}>
                     Clear All
                   </button>
@@ -1091,7 +1215,7 @@ export default function Fleet() {
           </div>
 
           {/* Core Fleet Cards Grid layout listing filtered models */}
-          <div key={`${activeCategory}-${searchTerm}-${selectedBrands.join(',')}-${minPrice}-${maxPrice}-${minPower}-${selectedGearbox}-${selectedEngine}-${selectedYear}`} className="fleet-grid__cards" ref={gridSectionRef}>
+          <div key={`${activeCategory}-${searchTerm}-${selectedBrands.join(',')}-${minPrice}-${maxPrice}-${minPower}-${selectedGearbox}-${selectedEngine}-${selectedYear}-${selectedSeats}-${selectedDriveType}-${selectedFuel}`} className="fleet-grid__cards" ref={gridSectionRef}>
             {filteredGridCars.length > 0 ? (
               filteredGridCars.map((car, index) => (
                 <CarCard key={`grid-${car.id}`} car={car} index={index} />
@@ -1121,7 +1245,6 @@ export default function Fleet() {
                 key={`drawer-thumb-${car.id}`}
                 onClick={() => {
                   setActiveIndex(idx);
-                  setActiveHotspot(null);
                   setShowMobileDrawer(false);
                 }}
                 className={`fleet-mobile-drawer__item ${activeIndex === idx ? 'fleet-mobile-drawer__item--active' : ''}`}

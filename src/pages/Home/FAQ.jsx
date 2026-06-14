@@ -95,7 +95,7 @@ export default function FAQ() {
             </div>
 
             <div className="faq__footer">
-              <Button variant="secondary" href="/contact" icon={true}>
+              <Button variant="secondary" href="/faq" icon={true}>
                 See More Questions
               </Button>
             </div>

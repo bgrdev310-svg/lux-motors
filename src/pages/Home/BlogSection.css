@@ -1,0 +1,293 @@
+.blog-section__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: var(--space-3xl);
+  gap: var(--space-xl);
+}
+
+.blog-section__subtitle {
+  color: var(--text-secondary);
+  font-size: var(--text-lg);
+  max-width: 580px;
+  margin-top: var(--space-md);
+}
+
+.blog-section__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+}
+
+/* Premium Card Layout */
+.blog-section__card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.015);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-xl);
+  box-shadow: 
+    0 16px 40px rgba(0, 0, 0, 0.4), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  text-decoration: none;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.blog-section__card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(201, 168, 76, 0.35);
+  box-shadow: 
+    0 24px 50px rgba(0, 0, 0, 0.6), 
+    0 0 30px rgba(201, 168, 76, 0.08), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Shifting Liquid Backlights inside Card */
+.blog-section__card-liquid-blob-1 {
+  position: absolute;
+  top: -40%;
+  left: -40%;
+  width: 240px;
+  height: 240px;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.04) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+  transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  opacity: 0.4;
+}
+
+.blog-section__card:hover .blog-section__card-liquid-blob-1 {
+  top: 30%;
+  left: 30%;
+  transform: scale(1.6);
+  opacity: 0.8;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.1) 0%, transparent 70%);
+}
+
+.blog-section__card-liquid-blob-2 {
+  position: absolute;
+  bottom: -40%;
+  right: -40%;
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.01) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+  transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  opacity: 0.3;
+}
+
+.blog-section__card:hover .blog-section__card-liquid-blob-2 {
+  bottom: 20%;
+  right: 20%;
+  transform: scale(1.8);
+  opacity: 0.7;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.02) 0%, transparent 70%);
+}
+
+/* Image Compartment */
+.blog-section__card-image-wrap {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  z-index: 1;
+  border-top-left-radius: var(--radius-xl);
+  border-top-right-radius: var(--radius-xl);
+  background-color: #030305;
+}
+
+.blog-section__card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.blog-section__card:hover .blog-section__card-image {
+  transform: scale(1.06) rotate(0.5deg);
+}
+
+/* Deep Inner Shadow Overlay on Image */
+.blog-section__card-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent 40%, rgba(3, 3, 5, 0.85) 100%);
+  box-shadow: 
+    inset 0 0 32px rgba(0, 0, 0, 0.8), 
+    inset 0 -30px 40px rgba(0, 0, 0, 0.7);
+}
+
+/* Category Badge overlay */
+.blog-section__card-category {
+  position: absolute;
+  top: var(--space-md);
+  left: var(--space-md);
+  z-index: 3;
+  background: rgba(10, 10, 15, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Card Body */
+.blog-section__card-body {
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  position: relative;
+  z-index: 1;
+  flex-grow: 1;
+}
+
+.blog-section__card-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.blog-section__card-read-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.blog-section__card-dot {
+  color: var(--accent-light);
+}
+
+.blog-section__card-title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--text-primary);
+  transition: color var(--transition-fast);
+  margin: var(--space-xs) 0;
+  /* limit lines to 2 for consistency */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 2.8em;
+}
+
+.blog-section__card:hover .blog-section__card-title {
+  color: var(--accent);
+}
+
+.blog-section__card-excerpt {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: var(--space-md);
+  /* limit excerpt to 2 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 3.2em;
+}
+
+/* Card Footer */
+.blog-section__card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  padding-top: var(--space-md);
+}
+
+.blog-section__card-link-text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.blog-section__card:hover .blog-section__card-link-text {
+  color: var(--accent-light);
+}
+
+.blog-section__card-arrow-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-muted);
+  transition: all var(--transition-base);
+}
+
+.blog-section__card:hover .blog-section__card-arrow-circle {
+  border-color: rgba(201, 168, 76, 0.4);
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.15) 0%, transparent 100%);
+  color: var(--accent-light);
+}
+
+.blog-section__card-arrow {
+  transition: transform var(--transition-base);
+}
+
+.blog-section__card:hover .blog-section__card-arrow {
+  transform: translateX(2px);
+}
+
+/* Responsive Rules */
+@media (max-width: 1024px) {
+  .blog-section__card-image-wrap {
+    height: 230px;
+  }
+}
+
+@media (max-width: 768px) {
+  .blog-section__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+  
+  .blog-section__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .blog-section__card-image-wrap {
+    height: 250px;
+  }
+}

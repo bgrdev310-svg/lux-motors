@@ -7,6 +7,9 @@
   overflow: hidden;
   transition: all var(--transition-base);
   position: relative;
+  display: block;
+  text-decoration: none;
+  color: inherit;
 }
 
 .car-card::before {

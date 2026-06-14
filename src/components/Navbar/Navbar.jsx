@@ -1,13 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import './Navbar.css';
-import { Menu, X, Phone, MessageCircle } from 'lucide-react';
+import { Menu, X, Phone, MessageCircle, Warehouse } from 'lucide-react';
 
 const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'Fleet', href: '/fleet' },
-  { label: 'Brands', href: '/brands' },
-  { label: 'Events', href: '/events' },
+  { label: 'About', href: '/about' },
   { label: 'Destinations', href: '/destinations' },
+  { label: 'Gallery', href: '/gallery' },
+  { label: 'FAQ', href: '/faq' },
   { label: 'Contact', href: '/contact' },
 ];
 
@@ -78,18 +80,21 @@ export default function Navbar() {
       >
         <div className="navbar__inner">
           {/* Logo */}
-          <a href="/" className="navbar__logo" aria-label="Lux Motors Home">
+          <Link to="/" className="navbar__logo" aria-label="Lux Motors Home">
             <span className="navbar__logo-lux">LUX</span>
             <span className="navbar__logo-motors">MOTORS</span>
-          </a>
+          </Link>
 
           {/* Desktop Links */}
           <div className="navbar__links">
             {navLinks.map((link) => (
-              <a key={link.label} href={link.href} className="navbar__link">
+              <Link key={link.label} to={link.href} className="navbar__link">
                 {link.label}
-              </a>
+              </Link>
             ))}
+            <Link to="/garage" className="navbar__link navbar__link--icon" aria-label="Garage Client Portal">
+              <Warehouse size={16} />
+            </Link>
           </div>
 
           {/* Right Side */}
@@ -122,16 +127,25 @@ export default function Navbar() {
       <div className={`navbar__mobile ${menuOpen ? 'navbar__mobile--open' : ''}`}>
         <div className="navbar__mobile-links">
           {navLinks.map((link, i) => (
-            <a
+            <Link
               key={link.label}
-              href={link.href}
+              to={link.href}
               className="navbar__mobile-link"
               style={{ animationDelay: `${i * 0.05}s` }}
               onClick={() => setMenuOpen(false)}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
+          <Link
+            to="/garage"
+            className="navbar__mobile-link navbar__mobile-link--icon"
+            style={{ animationDelay: `${navLinks.length * 0.05}s` }}
+            onClick={() => setMenuOpen(false)}
+          >
+            <Warehouse size={20} />
+            <span>Garage</span>
+          </Link>
         </div>
         <div className="navbar__mobile-footer">
           <a href="tel:+971509924247" className="navbar__mobile-phone">

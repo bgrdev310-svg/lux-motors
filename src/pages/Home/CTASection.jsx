@@ -1,8 +1,10 @@
 import './CTASection.css';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
+import { useHomepageStore } from '../../hooks/useHomepageStore';
 
 export default function CTASection() {
   const sectionRef = useScrollReveal();
+  const { config } = useHomepageStore();
 
   return (
     <section className="prestige-cta section" id="prestige-cta" ref={sectionRef}>
@@ -16,24 +18,24 @@ export default function CTASection() {
             {/* Status Indicator Badge */}
             <div className="cta-badge">
               <span className="cta-badge__dot"></span>
-              <span className="cta-badge__text">EXCLUSIVITY REDEFINED</span>
+              <span className="cta-badge__text">{config.ctaBadge}</span>
             </div>
 
             {/* Futuristic Luxury Title */}
             <h2 className="cta-title">
-              NEVER SETTLE FOR <br />
-              <span className="cta-title__highlight">THE ORDINARY.</span>
+              {config.ctaTitleLine1} <br />
+              <span className="cta-title__highlight">{config.ctaTitleLine2}</span>
             </h2>
 
             {/* Description Subtext */}
             <p className="cta-description">
-              Unleash ultimate performance and supreme comfort on the roads of Dubai. Our curated fleet of supercars, prestige sedans, and luxury SUVs is at your command.
+              {config.ctaDescription}
             </p>
 
             {/* Glowing Call to Action Button */}
             <div className="cta-action">
-              <a href="/fleet" className="cta-btn">
-                <span className="cta-btn__text">Rent Your Masterpiece</span>
+              <a href={config.ctaBtnLink} className="cta-btn">
+                <span className="cta-btn__text">{config.ctaBtnText}</span>
                 <span className="cta-btn__glow"></span>
               </a>
             </div>

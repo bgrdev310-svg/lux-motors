@@ -2,22 +2,38 @@ import './Testimonials.css';
 import { testimonials } from '../../data/testimonials';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { Star, Quote } from 'lucide-react';
+import { useHomepageStore } from '../../hooks/useHomepageStore';
 
 export default function Testimonials() {
   const sectionRef = useScrollReveal();
+  const { config } = useHomepageStore();
+
+  const testimonialsList = config.testimonialsList || testimonials;
+  const label = config.testimonialsLabel || 'Testimonials';
+  const title = config.testimonialsTitle || 'Voices From Real Drivers';
+
+  const renderTestimonialsTitle = (txt) => {
+    if (!txt) return '';
+    const parts = txt.split(/(real drivers)/i);
+    return parts.map((part, index) => 
+      part.toLowerCase() === 'real drivers' 
+        ? <span key={index} className="accent">{part}</span> 
+        : part
+    );
+  };
 
   return (
     <section className="testimonials section" id="testimonials" ref={sectionRef}>
       <div className="container">
         <div className="testimonials__header reveal">
-          <span className="section-label">Testimonials</span>
+          <span className="section-label">{label}</span>
           <h2 className="section-title">
-            Voices From <span className="accent">Real Drivers</span>
+            {renderTestimonialsTitle(title)}
           </h2>
         </div>
 
         <div className="testimonials__grid reveal reveal-delay-2">
-          {testimonials.map((t) => (
+          {testimonialsList.map((t) => (
             <div key={t.id} className="testimonials__card glass-widget">
               <div className="testimonials__card-header">
                 <Quote size={28} className="testimonials__quote-icon" />

@@ -1285,7 +1285,7 @@
 }
 
 .fleet-advanced-panel--open {
-  max-height: 600px; /* Adjust according to content size */
+  max-height: 1000px; /* Adjust according to content size */
   opacity: 1;
   border-color: rgba(255, 255, 255, 0.05);
   padding: var(--space-xl);
@@ -1866,7 +1866,7 @@
 /* Responsive Overrides for Filtering */
 @media (max-width: 900px) {
   .fleet-advanced-panel--open {
-    max-height: 700px;
+    max-height: 1200px;
   }
   .fleet-advanced-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -1881,7 +1881,7 @@
   }
   
   .fleet-advanced-panel--open {
-    max-height: 1200px;
+    max-height: 1600px;
     padding: var(--space-lg);
   }
 

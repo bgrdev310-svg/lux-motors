@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './WhyChooseUs.css';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { Shield, Clock, CreditCard, Headphones, MapPin, Sparkles } from 'lucide-react';
+import { useHomepageStore } from '../../hooks/useHomepageStore';
 
 const benefits = [
   {
@@ -103,22 +104,47 @@ const fleetComposition = [
   { category: 'Hyper Grand Tourers', percentage: 15 },
 ];
 
+const iconMap = {
+  Shield,
+  Clock,
+  CreditCard,
+  Headphones,
+  MapPin,
+  Sparkles
+};
+
 export default function WhyChooseUs() {
   const sectionRef = useScrollReveal();
   const [activeIndex, setActiveIndex] = useState(0);
+  const { config } = useHomepageStore();
 
-  const activeBenefit = benefits[activeIndex];
+  const activeBenefits = (config.wcuBenefits || benefits).map(b => ({
+    ...b,
+    icon: typeof b.icon === 'string' ? (iconMap[b.icon] || Sparkles) : b.icon
+  }));
+
+  const activeBenefit = activeBenefits[activeIndex] || activeBenefits[0] || benefits[0];
+
+  const renderWcuTitle = (title) => {
+    if (!title) return '';
+    const parts = title.split(/(luxury)/i);
+    return parts.map((part, index) => 
+      part.toLowerCase() === 'luxury' 
+        ? <span key={index} className="accent">{part}</span> 
+        : part
+    );
+  };
 
   return (
     <section className="why-choose section" id="why-choose-us" ref={sectionRef}>
       <div className="container">
         <div className="why-choose__header reveal">
-          <span className="section-label">Why Lux Motors</span>
+          <span className="section-label">{config.wcuLabel}</span>
           <h2 className="section-title">
-            The <span className="accent">Luxury</span> Standard
+            {renderWcuTitle(config.wcuTitle)}
           </h2>
           <p className="why-choose__subtitle">
-            More than a rental — an experience crafted for those who demand excellence.
+            {config.wcuSubtitle}
           </p>
         </div>
 
@@ -202,7 +228,7 @@ export default function WhyChooseUs() {
 
           {/* Right Column: Interactive Tiles Grid */}
           <div className="why-choose__grid reveal reveal-delay-2">
-            {benefits.map((b, index) => {
+            {activeBenefits.map((b, index) => {
               const isActive = activeIndex === index;
               const Icon = b.icon;
               return (

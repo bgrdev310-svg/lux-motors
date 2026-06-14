@@ -3,25 +3,40 @@ import { featuredCars } from '../../data/cars';
 import CarCard from '../../components/CarCard/CarCard';
 import Button from '../../components/Button/Button';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
+import { useHomepageStore } from '../../hooks/useHomepageStore';
 
 export default function FeaturedFleet() {
   const sectionRef = useScrollReveal();
+  const { config } = useHomepageStore();
+
+  // Helper to highlight the last word of the title
+  const renderTitle = (title) => {
+    if (!title) return '';
+    const words = title.split(' ');
+    if (words.length <= 1) return title;
+    const lastWord = words.pop();
+    return (
+      <>
+        {words.join(' ')} <span className="accent">{lastWord}</span>
+      </>
+    );
+  };
 
   return (
     <section className="featured-fleet section" id="featured-fleet" ref={sectionRef}>
       <div className="container">
         <div className="featured-fleet__header reveal">
           <div>
-            <span className="section-label">Our Fleet</span>
+            <span className="section-label">{config.fleetLabel}</span>
             <h2 className="section-title">
-              Drive Your <span className="accent">Dream</span>
+              {renderTitle(config.fleetTitle)}
             </h2>
             <p className="featured-fleet__subtitle">
-              From fierce supercars to elegant luxury sedans, find the perfect car for every occasion.
+              {config.fleetSubtitle}
             </p>
           </div>
           <Button variant="secondary" icon href="/fleet" className="featured-fleet__cta reveal reveal-delay-2">
-            View All Cars
+            {config.fleetCtaText}
           </Button>
         </div>
 
