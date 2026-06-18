@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   Save, RotateCcw, Image as ImageIcon, ChevronDown,
   Sparkles, AlertTriangle, Check, Upload, Layers,
-  Compass, Zap, MessageSquare, Trash2, ArrowUpRight, HelpCircle
+  Compass, Zap, MessageSquare, Trash2, ArrowUpRight, HelpCircle,
+  PenLine
 } from 'lucide-react';
 import { useHomepageStore, DEFAULT_CONFIG } from '../../hooks/useHomepageStore';
+import AdminSelect from '../../components/admin/AdminSelect';
 import './HomepageManager.css';
 
 const fadeUp = {
@@ -17,6 +19,13 @@ const HomepageManager = () => {
   const { config, save, resetToDefaults } = useHomepageStore();
   const [editedConfig, setEditedConfig] = useState(() => ({ ...config }));
   const [expandedSection, setExpandedSection] = useState('hero');
+  const [editingSections, setEditingSections] = useState({
+    hero: false,
+    fleet: false,
+    wcu: false,
+    testimonials: false,
+    cta: false,
+  });
   const [toast, setToast] = useState(null);
   const [saving, setSaving] = useState(false);
   const fileInputRef = useRef(null);
@@ -198,6 +207,20 @@ const HomepageManager = () => {
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
                 className="hm-section-content"
               >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, paddingBottom: 12, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                  <span style={{ fontSize: '0.8rem', color: editingSections.hero ? '#c9a84c' : 'var(--admin-text-muted)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: editingSections.hero ? '#c9a84c' : 'rgba(255,255,255,0.2)' }} />
+                    {editingSections.hero ? 'Mode: Editing Active' : 'Mode: Read-Only'}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setEditingSections(prev => ({ ...prev, hero: !prev.hero }))}
+                    className={`hm-section-edit-btn ${editingSections.hero ? 'hm-section-edit-btn--active' : 'hm-section-edit-btn--inactive'}`}
+                  >
+                    {editingSections.hero ? <Check size={14} /> : <PenLine size={14} />}
+                    {editingSections.hero ? 'Done' : 'Edit Section'}
+                  </button>
+                </div>
                 <div className="hm-fields-grid">
                   {/* Label */}
                   <div className="hm-form-group hm-field-fullwidth">
@@ -210,6 +233,7 @@ const HomepageManager = () => {
                         value={editedConfig.heroLabel}
                         onChange={e => handleChange('heroLabel', e.target.value)}
                         placeholder="Dubai's Premier Luxury Fleet"
+                        disabled={!editingSections.hero}
                       />
                     </div>
                   </div>
@@ -224,6 +248,7 @@ const HomepageManager = () => {
                         value={editedConfig.heroTitleLine1}
                         onChange={e => handleChange('heroTitleLine1', e.target.value)}
                         placeholder="Command"
+                        disabled={!editingSections.hero}
                       />
                     </div>
                   </div>
@@ -237,6 +262,7 @@ const HomepageManager = () => {
                         value={editedConfig.heroTitleLine2}
                         onChange={e => handleChange('heroTitleLine2', e.target.value)}
                         placeholder="The Road."
+                        disabled={!editingSections.hero}
                       />
                     </div>
                   </div>
@@ -251,6 +277,7 @@ const HomepageManager = () => {
                         onChange={e => handleChange('heroTitleAccent', e.target.value)}
                         placeholder="Own The Moment."
                         style={{ color: '#c9a84c', fontWeight: 'bold' }}
+                        disabled={!editingSections.hero}
                       />
                     </div>
                   </div>
@@ -264,6 +291,7 @@ const HomepageManager = () => {
                         value={editedConfig.heroDescription}
                         onChange={e => handleChange('heroDescription', e.target.value)}
                         placeholder="Describe your premier fleet services..."
+                        disabled={!editingSections.hero}
                       />
                     </div>
                   </div>
@@ -278,6 +306,7 @@ const HomepageManager = () => {
                         value={editedConfig.heroPrimaryCtaText}
                         onChange={e => handleChange('heroPrimaryCtaText', e.target.value)}
                         placeholder="Explore Fleet"
+                        disabled={!editingSections.hero}
                       />
                     </div>
                   </div>
@@ -291,6 +320,7 @@ const HomepageManager = () => {
                         value={editedConfig.heroPrimaryCtaLink}
                         onChange={e => handleChange('heroPrimaryCtaLink', e.target.value)}
                         placeholder="/fleet"
+                        disabled={!editingSections.hero}
                       />
                     </div>
                   </div>
@@ -305,6 +335,7 @@ const HomepageManager = () => {
                         value={editedConfig.heroSecondaryCtaText}
                         onChange={e => handleChange('heroSecondaryCtaText', e.target.value)}
                         placeholder="Book Now"
+                        disabled={!editingSections.hero}
                       />
                     </div>
                   </div>
@@ -318,6 +349,7 @@ const HomepageManager = () => {
                         value={editedConfig.heroSecondaryCtaLink}
                         onChange={e => handleChange('heroSecondaryCtaLink', e.target.value)}
                         placeholder="https://wa.me/971509924247"
+                        disabled={!editingSections.hero}
                       />
                     </div>
                   </div>
@@ -333,6 +365,7 @@ const HomepageManager = () => {
                         value={editedConfig.heroTrustText}
                         onChange={e => handleChange('heroTrustText', e.target.value)}
                         placeholder="Trusted by 1,000+ clients"
+                        disabled={!editingSections.hero}
                       />
                     </div>
                   </div>
@@ -342,10 +375,10 @@ const HomepageManager = () => {
                     <label className="hm-label">Background Image (Upload File or Paste Web URL)</label>
                     <div className="hm-upload-container">
                       <div
-                        className="hm-upload-zone"
-                        onDragOver={handleDragOver}
-                        onDrop={handleDrop}
-                        onClick={() => fileInputRef.current.click()}
+                        className={`hm-upload-zone ${!editingSections.hero ? 'disabled' : ''}`}
+                        onDragOver={editingSections.hero ? handleDragOver : undefined}
+                        onDrop={editingSections.hero ? handleDrop : undefined}
+                        onClick={editingSections.hero ? () => fileInputRef.current.click() : undefined}
                       >
                         <Upload className="hm-upload-icon" size={28} />
                         <span className="hm-upload-text">Drag & drop your file here, or <strong style={{ color: '#c9a84c' }}>Browse</strong></span>
@@ -356,19 +389,22 @@ const HomepageManager = () => {
                           style={{ display: 'none' }}
                           accept="image/*"
                           onChange={e => handleImageFile(e.target.files[0])}
+                          disabled={!editingSections.hero}
                         />
                       </div>
                       <div className="hm-upload-preview">
                         {editedConfig.heroBgImage ? (
                           <>
                             <img src={editedConfig.heroBgImage} alt="Hero Background Preview" />
-                            <button
-                              className="hm-remove-img-btn"
-                              title="Clear Image"
-                              onClick={() => handleChange('heroBgImage', '')}
-                            >
-                              <Trash2 size={12} />
-                            </button>
+                            {editingSections.hero && (
+                              <button
+                                className="hm-remove-img-btn"
+                                title="Clear Image"
+                                onClick={() => handleChange('heroBgImage', '')}
+                              >
+                                <Trash2 size={12} />
+                              </button>
+                            )}
                           </>
                         ) : (
                           <div className="hm-preview-fallback">
@@ -385,6 +421,7 @@ const HomepageManager = () => {
                         value={editedConfig.heroBgImage}
                         onChange={e => handleChange('heroBgImage', e.target.value)}
                         placeholder="Or paste direct image URL (https://...)"
+                        disabled={!editingSections.hero}
                       />
                     </div>
                   </div>
@@ -405,6 +442,7 @@ const HomepageManager = () => {
                         value={editedConfig.heroCarName}
                         onChange={e => handleChange('heroCarName', e.target.value)}
                         placeholder="Lamborghini Urus"
+                        disabled={!editingSections.hero}
                       />
                     </div>
                   </div>
@@ -418,6 +456,7 @@ const HomepageManager = () => {
                         value={editedConfig.heroCarTagline}
                         onChange={e => handleChange('heroCarTagline', e.target.value)}
                         placeholder="The World's First Super SUV"
+                        disabled={!editingSections.hero}
                       />
                     </div>
                   </div>
@@ -432,6 +471,7 @@ const HomepageManager = () => {
                         value={editedConfig.heroCarSpecAcceleration}
                         onChange={e => handleChange('heroCarSpecAcceleration', e.target.value)}
                         placeholder="3.6s"
+                        disabled={!editingSections.hero}
                       />
                     </div>
                   </div>
@@ -445,6 +485,7 @@ const HomepageManager = () => {
                         value={editedConfig.heroCarSpecPower}
                         onChange={e => handleChange('heroCarSpecPower', e.target.value)}
                         placeholder="666 HP"
+                        disabled={!editingSections.hero}
                       />
                     </div>
                   </div>
@@ -458,6 +499,7 @@ const HomepageManager = () => {
                         value={editedConfig.heroCarSpecEngine}
                         onChange={e => handleChange('heroCarSpecEngine', e.target.value)}
                         placeholder="V8 Twin-Turbo"
+                        disabled={!editingSections.hero}
                       />
                     </div>
                   </div>
@@ -493,6 +535,20 @@ const HomepageManager = () => {
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
                 className="hm-section-content"
               >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, paddingBottom: 12, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                  <span style={{ fontSize: '0.8rem', color: editingSections.fleet ? '#c9a84c' : 'var(--admin-text-muted)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: editingSections.fleet ? '#c9a84c' : 'rgba(255,255,255,0.2)' }} />
+                    {editingSections.fleet ? 'Mode: Editing Active' : 'Mode: Read-Only'}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setEditingSections(prev => ({ ...prev, fleet: !prev.fleet }))}
+                    className={`hm-section-edit-btn ${editingSections.fleet ? 'hm-section-edit-btn--active' : 'hm-section-edit-btn--inactive'}`}
+                  >
+                    {editingSections.fleet ? <Check size={14} /> : <PenLine size={14} />}
+                    {editingSections.fleet ? 'Done' : 'Edit Section'}
+                  </button>
+                </div>
                 <div className="hm-fields-grid">
                   <div className="hm-form-group">
                     <label className="hm-label">Section Label</label>
@@ -503,6 +559,7 @@ const HomepageManager = () => {
                         value={editedConfig.fleetLabel}
                         onChange={e => handleChange('fleetLabel', e.target.value)}
                         placeholder="Our Fleet"
+                        disabled={!editingSections.fleet}
                       />
                     </div>
                   </div>
@@ -516,6 +573,7 @@ const HomepageManager = () => {
                         value={editedConfig.fleetTitle}
                         onChange={e => handleChange('fleetTitle', e.target.value)}
                         placeholder="Drive Your Dream"
+                        disabled={!editingSections.fleet}
                       />
                     </div>
                   </div>
@@ -529,6 +587,7 @@ const HomepageManager = () => {
                         onChange={e => handleChange('fleetSubtitle', e.target.value)}
                         placeholder="From fierce supercars to elegant luxury..."
                         style={{ minHeight: 60 }}
+                        disabled={!editingSections.fleet}
                       />
                     </div>
                   </div>
@@ -542,6 +601,7 @@ const HomepageManager = () => {
                         value={editedConfig.fleetCtaText}
                         onChange={e => handleChange('fleetCtaText', e.target.value)}
                         placeholder="View All Cars"
+                        disabled={!editingSections.fleet}
                       />
                     </div>
                   </div>
@@ -577,6 +637,20 @@ const HomepageManager = () => {
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
                 className="hm-section-content"
               >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, paddingBottom: 12, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                  <span style={{ fontSize: '0.8rem', color: editingSections.wcu ? '#c9a84c' : 'var(--admin-text-muted)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: editingSections.wcu ? '#c9a84c' : 'rgba(255,255,255,0.2)' }} />
+                    {editingSections.wcu ? 'Mode: Editing Active' : 'Mode: Read-Only'}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setEditingSections(prev => ({ ...prev, wcu: !prev.wcu }))}
+                    className={`hm-section-edit-btn ${editingSections.wcu ? 'hm-section-edit-btn--active' : 'hm-section-edit-btn--inactive'}`}
+                  >
+                    {editingSections.wcu ? <Check size={14} /> : <PenLine size={14} />}
+                    {editingSections.wcu ? 'Done' : 'Edit Section'}
+                  </button>
+                </div>
                 <div className="hm-fields-grid">
                   <div className="hm-form-group">
                     <label className="hm-label">Section Label</label>
@@ -587,6 +661,7 @@ const HomepageManager = () => {
                         value={editedConfig.wcuLabel}
                         onChange={e => handleChange('wcuLabel', e.target.value)}
                         placeholder="Why Lux Motors"
+                        disabled={!editingSections.wcu}
                       />
                     </div>
                   </div>
@@ -600,6 +675,7 @@ const HomepageManager = () => {
                         value={editedConfig.wcuTitle}
                         onChange={e => handleChange('wcuTitle', e.target.value)}
                         placeholder="The Luxury Standard"
+                        disabled={!editingSections.wcu}
                       />
                     </div>
                   </div>
@@ -613,6 +689,7 @@ const HomepageManager = () => {
                         onChange={e => handleChange('wcuSubtitle', e.target.value)}
                         placeholder="More than a rental — an experience..."
                         style={{ minHeight: 60 }}
+                        disabled={!editingSections.wcu}
                       />
                     </div>
                   </div>
@@ -652,6 +729,7 @@ const HomepageManager = () => {
                               value={editedConfig.wcuBenefits[selectedWcuCardIndex].title || ''}
                               onChange={e => handleWcuCardChange(selectedWcuCardIndex, 'title', e.target.value)}
                               placeholder="Premium Fleet"
+                              disabled={!editingSections.wcu}
                             />
                           </div>
                         </div>
@@ -659,21 +737,12 @@ const HomepageManager = () => {
                         {/* Icon */}
                         <div className="hm-form-group">
                           <label className="hm-label">Card Icon</label>
-                          <div className="hm-input-wrap select-wrap">
-                            <select
-                              className="hm-input select-input"
-                              value={editedConfig.wcuBenefits[selectedWcuCardIndex].icon || 'Sparkles'}
-                              onChange={e => handleWcuCardChange(selectedWcuCardIndex, 'icon', e.target.value)}
-                              style={{ background: 'transparent', border: 'none', width: '100%', outline: 'none', color: '#fff', cursor: 'pointer' }}
-                            >
-                              <option value="Sparkles" style={{ background: '#121218' }}>Sparkles</option>
-                              <option value="MapPin" style={{ background: '#121218' }}>MapPin</option>
-                              <option value="CreditCard" style={{ background: '#121218' }}>CreditCard</option>
-                              <option value="Clock" style={{ background: '#121218' }}>Clock</option>
-                              <option value="Headphones" style={{ background: '#121218' }}>Headphones</option>
-                              <option value="Shield" style={{ background: '#121218' }}>Shield</option>
-                            </select>
-                          </div>
+                          <AdminSelect
+                            value={editedConfig.wcuBenefits[selectedWcuCardIndex].icon || 'Sparkles'}
+                            onChange={val => handleWcuCardChange(selectedWcuCardIndex, 'icon', val)}
+                            options={['Sparkles', 'MapPin', 'CreditCard', 'Clock', 'Headphones', 'Shield']}
+                            disabled={!editingSections.wcu}
+                          />
                         </div>
 
                         {/* Description */}
@@ -686,6 +755,7 @@ const HomepageManager = () => {
                               onChange={e => handleWcuCardChange(selectedWcuCardIndex, 'description', e.target.value)}
                               placeholder="500+ handpicked vehicles..."
                               style={{ minHeight: 60 }}
+                              disabled={!editingSections.wcu}
                             />
                           </div>
                         </div>
@@ -700,6 +770,7 @@ const HomepageManager = () => {
                               value={editedConfig.wcuBenefits[selectedWcuCardIndex].metric || ''}
                               onChange={e => handleWcuCardChange(selectedWcuCardIndex, 'metric', e.target.value)}
                               placeholder="500+ ELITE VEHICLES"
+                              disabled={!editingSections.wcu}
                             />
                           </div>
                         </div>
@@ -714,6 +785,7 @@ const HomepageManager = () => {
                               value={editedConfig.wcuBenefits[selectedWcuCardIndex].tagline || ''}
                               onChange={e => handleWcuCardChange(selectedWcuCardIndex, 'tagline', e.target.value)}
                               placeholder="Track-Ready Perfection"
+                              disabled={!editingSections.wcu}
                             />
                           </div>
                         </div>
@@ -733,6 +805,7 @@ const HomepageManager = () => {
                                     onChange={e => handleWcuFactChange(selectedWcuCardIndex, factIdx, 'label', e.target.value)}
                                     placeholder="Fact label"
                                     style={{ fontSize: '0.85rem' }}
+                                    disabled={!editingSections.wcu}
                                   />
                                 </div>
                                 <div className="hm-input-wrap" style={{ width: 180, height: 44 }}>
@@ -744,6 +817,7 @@ const HomepageManager = () => {
                                     onChange={e => handleWcuFactChange(selectedWcuCardIndex, factIdx, 'val', e.target.value)}
                                     placeholder="Fact value"
                                     style={{ fontSize: '0.85rem' }}
+                                    disabled={!editingSections.wcu}
                                   />
                                 </div>
                               </div>
@@ -785,6 +859,20 @@ const HomepageManager = () => {
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
                 className="hm-section-content"
               >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, paddingBottom: 12, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                  <span style={{ fontSize: '0.8rem', color: editingSections.testimonials ? '#c9a84c' : 'var(--admin-text-muted)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: editingSections.testimonials ? '#c9a84c' : 'rgba(255,255,255,0.2)' }} />
+                    {editingSections.testimonials ? 'Mode: Editing Active' : 'Mode: Read-Only'}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setEditingSections(prev => ({ ...prev, testimonials: !prev.testimonials }))}
+                    className={`hm-section-edit-btn ${editingSections.testimonials ? 'hm-section-edit-btn--active' : 'hm-section-edit-btn--inactive'}`}
+                  >
+                    {editingSections.testimonials ? <Check size={14} /> : <PenLine size={14} />}
+                    {editingSections.testimonials ? 'Done' : 'Edit Section'}
+                  </button>
+                </div>
                 <div className="hm-fields-grid">
                   <div className="hm-form-group">
                     <label className="hm-label">Section Label</label>
@@ -795,6 +883,7 @@ const HomepageManager = () => {
                         value={editedConfig.testimonialsLabel || ''}
                         onChange={e => handleChange('testimonialsLabel', e.target.value)}
                         placeholder="Testimonials"
+                        disabled={!editingSections.testimonials}
                       />
                     </div>
                   </div>
@@ -808,6 +897,7 @@ const HomepageManager = () => {
                         value={editedConfig.testimonialsTitle || ''}
                         onChange={e => handleChange('testimonialsTitle', e.target.value)}
                         placeholder="Voices From Real Drivers"
+                        disabled={!editingSections.testimonials}
                       />
                     </div>
                   </div>
@@ -815,14 +905,16 @@ const HomepageManager = () => {
                   <div className="hm-form-group hm-field-fullwidth" style={{ marginTop: 12, borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 18 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                       <label className="hm-label" style={{ color: '#10b981' }}>Manage Customer Reviews</label>
-                      <button
-                        type="button"
-                        className="hm-btn-reset"
-                        onClick={handleAddTestimonial}
-                        style={{ height: 32, padding: '0 12px', fontSize: '0.75rem', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(16, 185, 129, 0.15)', borderColor: 'rgba(16, 185, 129, 0.3)', color: '#10b981' }}
-                      >
-                        + Add Review
-                      </button>
+                      {editingSections.testimonials && (
+                        <button
+                          type="button"
+                          className="hm-btn-reset"
+                          onClick={handleAddTestimonial}
+                          style={{ height: 32, padding: '0 12px', fontSize: '0.75rem', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(16, 185, 129, 0.15)', borderColor: 'rgba(16, 185, 129, 0.3)', color: '#10b981' }}
+                        >
+                          + Add Review
+                        </button>
+                      )}
                     </div>
                     
                     <div className="hm-testimonials-list" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -830,14 +922,16 @@ const HomepageManager = () => {
                         <div className="hm-testimonial-item-card" key={t.id || index}>
                           <div className="hm-testimonial-item-header">
                             <span className="hm-testimonial-number">Review #{index + 1}</span>
-                            <button
-                              type="button"
-                              className="hm-btn-delete-testimonial"
-                              onClick={() => handleDeleteTestimonial(index)}
-                              title="Delete Testimonial"
-                            >
-                              <Trash2 size={14} />
-                            </button>
+                            {editingSections.testimonials && (
+                              <button
+                                type="button"
+                                className="hm-btn-delete-testimonial"
+                                onClick={() => handleDeleteTestimonial(index)}
+                                title="Delete Testimonial"
+                              >
+                                <Trash2 size={14} />
+                              </button>
+                            )}
                           </div>
                           <div className="hm-fields-grid">
                             {/* Author Name */}
@@ -850,6 +944,7 @@ const HomepageManager = () => {
                                   value={t.name || ''}
                                   onChange={e => handleTestimonialChange(index, 'name', e.target.value)}
                                   placeholder="Alexander K."
+                                  disabled={!editingSections.testimonials}
                                 />
                               </div>
                             </div>
@@ -864,6 +959,7 @@ const HomepageManager = () => {
                                   value={t.location || ''}
                                   onChange={e => handleTestimonialChange(index, 'location', e.target.value)}
                                   placeholder="Moscow, Russia"
+                                  disabled={!editingSections.testimonials}
                                 />
                               </div>
                             </div>
@@ -878,6 +974,7 @@ const HomepageManager = () => {
                                   value={t.car || ''}
                                   onChange={e => handleTestimonialChange(index, 'car', e.target.value)}
                                   placeholder="Lamborghini Urus"
+                                  disabled={!editingSections.testimonials}
                                 />
                               </div>
                             </div>
@@ -885,20 +982,18 @@ const HomepageManager = () => {
                             {/* Rating (1-5 Stars) */}
                             <div className="hm-form-group">
                               <label className="hm-label">Rating (Stars)</label>
-                              <div className="hm-input-wrap select-wrap">
-                                <select
-                                  className="hm-input select-input"
-                                  value={t.rating || 5}
-                                  onChange={e => handleTestimonialChange(index, 'rating', parseInt(e.target.value))}
-                                  style={{ background: 'transparent', border: 'none', width: '100%', outline: 'none', color: '#fff', cursor: 'pointer' }}
-                                >
-                                  <option value="5" style={{ background: '#121218' }}>5 Stars</option>
-                                  <option value="4" style={{ background: '#121218' }}>4 Stars</option>
-                                  <option value="3" style={{ background: '#121218' }}>3 Stars</option>
-                                  <option value="2" style={{ background: '#121218' }}>2 Stars</option>
-                                  <option value="1" style={{ background: '#121218' }}>1 Star</option>
-                                </select>
-                              </div>
+                              <AdminSelect
+                                value={t.rating || 5}
+                                onChange={val => handleTestimonialChange(index, 'rating', val)}
+                                options={[
+                                  { value: 5, label: '5 Stars' },
+                                  { value: 4, label: '4 Stars' },
+                                  { value: 3, label: '3 Stars' },
+                                  { value: 2, label: '2 Stars' },
+                                  { value: 1, label: '1 Star' }
+                                ]}
+                                disabled={!editingSections.testimonials}
+                              />
                             </div>
 
                             {/* Initials / Avatar */}
@@ -912,6 +1007,7 @@ const HomepageManager = () => {
                                   value={t.avatar || ''}
                                   onChange={e => handleTestimonialChange(index, 'avatar', e.target.value)}
                                   placeholder="AK"
+                                  disabled={!editingSections.testimonials}
                                 />
                               </div>
                             </div>
@@ -926,6 +1022,7 @@ const HomepageManager = () => {
                                   onChange={e => handleTestimonialChange(index, 'text', e.target.value)}
                                   placeholder="Absolutely phenomenal service..."
                                   style={{ minHeight: 60 }}
+                                  disabled={!editingSections.testimonials}
                                 />
                               </div>
                             </div>
@@ -971,6 +1068,20 @@ const HomepageManager = () => {
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
                 className="hm-section-content"
               >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, paddingBottom: 12, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                  <span style={{ fontSize: '0.8rem', color: editingSections.cta ? '#c9a84c' : 'var(--admin-text-muted)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: editingSections.cta ? '#c9a84c' : 'rgba(255,255,255,0.2)' }} />
+                    {editingSections.cta ? 'Mode: Editing Active' : 'Mode: Read-Only'}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setEditingSections(prev => ({ ...prev, cta: !prev.cta }))}
+                    className={`hm-section-edit-btn ${editingSections.cta ? 'hm-section-edit-btn--active' : 'hm-section-edit-btn--inactive'}`}
+                  >
+                    {editingSections.cta ? <Check size={14} /> : <PenLine size={14} />}
+                    {editingSections.cta ? 'Done' : 'Edit Section'}
+                  </button>
+                </div>
                 <div className="hm-fields-grid">
                   <div className="hm-form-group hm-field-fullwidth">
                     <label className="hm-label">Badge Text</label>
@@ -981,6 +1092,7 @@ const HomepageManager = () => {
                         value={editedConfig.ctaBadge}
                         onChange={e => handleChange('ctaBadge', e.target.value)}
                         placeholder="EXCLUSIVITY REDEFINED"
+                        disabled={!editingSections.cta}
                       />
                     </div>
                   </div>
@@ -994,6 +1106,7 @@ const HomepageManager = () => {
                         value={editedConfig.ctaTitleLine1}
                         onChange={e => handleChange('ctaTitleLine1', e.target.value)}
                         placeholder="NEVER SETTLE FOR"
+                        disabled={!editingSections.cta}
                       />
                     </div>
                   </div>
@@ -1008,6 +1121,7 @@ const HomepageManager = () => {
                         onChange={e => handleChange('ctaTitleLine2', e.target.value)}
                         placeholder="THE ORDINARY."
                         style={{ color: '#c9a84c', fontWeight: 'bold' }}
+                        disabled={!editingSections.cta}
                       />
                     </div>
                   </div>
@@ -1021,6 +1135,7 @@ const HomepageManager = () => {
                         onChange={e => handleChange('ctaDescription', e.target.value)}
                         placeholder="Unleash ultimate performance..."
                         style={{ minHeight: 80 }}
+                        disabled={!editingSections.cta}
                       />
                     </div>
                   </div>
@@ -1034,6 +1149,7 @@ const HomepageManager = () => {
                         value={editedConfig.ctaBtnText}
                         onChange={e => handleChange('ctaBtnText', e.target.value)}
                         placeholder="Rent Your Masterpiece"
+                        disabled={!editingSections.cta}
                       />
                     </div>
                   </div>
@@ -1047,6 +1163,7 @@ const HomepageManager = () => {
                         value={editedConfig.ctaBtnLink}
                         onChange={e => handleChange('ctaBtnLink', e.target.value)}
                         placeholder="/fleet"
+                        disabled={!editingSections.cta}
                       />
                     </div>
                   </div>

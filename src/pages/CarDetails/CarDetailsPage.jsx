@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import './CarDetailsPage.css';
+import DatePicker from '../../components/DatePicker/DatePicker';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { useFleetStore } from '../../hooks/useFleetStore';
 import { toCarDetailsShape, toCarCardShape, DEFAULT_FLEET } from '../../data/defaultFleet';
@@ -47,6 +48,11 @@ export default function CarDetailsPage() {
   // Booking inputs
   const [pickupDate, setPickupDate] = useState('');
   const [returnDate, setReturnDate] = useState('');
+  const [isBookModalOpen, setIsBookModalOpen] = useState(false);
+  const [idCardFile, setIdCardFile] = useState(null);
+  const [licenseFile, setLicenseFile] = useState(null);
+  const [isBookingConfirmed, setIsBookingConfirmed] = useState(false);
+  const [uploadError, setUploadError] = useState('');
   const sidebarRef = useRef(null);
 
   // Extract slug on mount or URL change
@@ -75,12 +81,80 @@ export default function CarDetailsPage() {
     setActiveImageIndex((prev) => (prev === car.images.length - 1 ? 0 : prev + 1));
   };
 
-  // Pre-fill date based on duration tier selection
+  // Set today's date limit on calendar inputs
+  const todayDateStr = useMemo(() => {
+    return new Date().toISOString().split('T')[0];
+  }, []);
+
+  // Generate booked dates dynamically for each car
+  const bookedDates = useMemo(() => {
+    if (!car) return [];
+    if (car.bookedDates && Array.isArray(car.bookedDates)) {
+      return car.bookedDates;
+    }
+    const id = car.id || 1;
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth(); // 0-indexed
+    
+    // Seed number
+    const seed = typeof id === 'number' ? id : (id.charCodeAt(0) || 3);
+    const formatDateStr = (y, m, d) => {
+      const mm = String(m + 1).padStart(2, '0');
+      const dd = String(d).padStart(2, '0');
+      return `${y}-${mm}-${dd}`;
+    };
+    
+    const dates = [];
+    
+    // Block 1: today + 2 and today + 3
+    const d1 = new Date(today);
+    d1.setDate(today.getDate() + (seed % 3) + 2);
+    dates.push(d1.toISOString().split('T')[0]);
+    
+    const d1_end = new Date(d1);
+    d1_end.setDate(d1.getDate() + 1);
+    dates.push(d1_end.toISOString().split('T')[0]);
+    
+    // Block 2: today + 7, today + 8, today + 9
+    const d2 = new Date(today);
+    d2.setDate(today.getDate() + (seed % 4) + 7);
+    dates.push(d2.toISOString().split('T')[0]);
+    
+    const d2_end1 = new Date(d2);
+    d2_end1.setDate(d2.getDate() + 1);
+    dates.push(d2_end1.toISOString().split('T')[0]);
+    
+    const d2_end2 = new Date(d2);
+    d2_end2.setDate(d2.getDate() + 2);
+    dates.push(d2_end2.toISOString().split('T')[0]);
+    
+    // Block 3: next month days 14, 15
+    const nextMonth = (month + 1) % 12;
+    const nextYear = month === 11 ? year + 1 : year;
+    dates.push(formatDateStr(nextYear, nextMonth, 14));
+    dates.push(formatDateStr(nextYear, nextMonth, 15));
+    
+    return dates.sort();
+  }, [car]);
+
+  // Compute maximum allowed return date dynamically to prevent booking overlapping with existing reservations
+  const maxReturnDateStr = useMemo(() => {
+    if (!pickupDate || !bookedDates.length) return '';
+    
+    const futureBookings = bookedDates.filter(d => d > pickupDate);
+    if (futureBookings.length > 0) {
+      const firstBooked = new Date(futureBookings[0]);
+      const maxDate = new Date(firstBooked);
+      maxDate.setDate(firstBooked.getDate() - 1);
+      return maxDate.toISOString().split('T')[0];
+    }
+    return '';
+  }, [pickupDate, bookedDates]);
+
+  // Pre-fill date based on duration tier selection, ensuring no overlap with booked dates
   const handleSelectDurationTier = (daysTier) => {
     const today = new Date();
-    const targetDate = new Date();
-    targetDate.setDate(today.getDate() + daysTier);
-    
     const formatDate = (date) => {
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -88,8 +162,46 @@ export default function CarDetailsPage() {
       return `${year}-${month}-${day}`;
     };
     
-    setPickupDate(formatDate(today));
-    setReturnDate(formatDate(targetDate));
+    let testDate = new Date(today);
+    let found = false;
+    
+    for (let offset = 0; offset < 60; offset++) {
+      const pickupStr = formatDate(testDate);
+      if (bookedDates.includes(pickupStr)) {
+        testDate.setDate(testDate.getDate() + 1);
+        continue;
+      }
+      
+      let overlap = false;
+      for (let d = 1; d <= daysTier; d++) {
+        const checkDate = new Date(testDate);
+        checkDate.setDate(testDate.getDate() + d);
+        const checkStr = formatDate(checkDate);
+        if (bookedDates.includes(checkStr)) {
+          overlap = true;
+          break;
+        }
+      }
+      
+      if (!overlap) {
+        const returnDateObj = new Date(testDate);
+        returnDateObj.setDate(testDate.getDate() + daysTier);
+        
+        setPickupDate(pickupStr);
+        setReturnDate(formatDate(returnDateObj));
+        found = true;
+        break;
+      }
+      
+      testDate.setDate(testDate.getDate() + 1);
+    }
+    
+    if (!found) {
+      const fallbackTarget = new Date(today);
+      fallbackTarget.setDate(today.getDate() + daysTier);
+      setPickupDate(formatDate(today));
+      setReturnDate(formatDate(fallbackTarget));
+    }
   };
 
   // Calculate rental duration & invoice fees
@@ -218,6 +330,27 @@ export default function CarDetailsPage() {
     return `https://wa.me/${number}?text=${encodeURIComponent(msg)}`;
   }, [car, billingInfo, pickupDate, returnDate]);
 
+  const handleBookNowClick = () => {
+    if (!pickupDate || !returnDate || !billingInfo) {
+      setToastMessage('Please select pickup and return dates first.');
+      setShowToast(true);
+      return;
+    }
+    setUploadError('');
+    setIsBookingConfirmed(false);
+    setIsBookModalOpen(true);
+  };
+
+  const handleConfirmBooking = (e) => {
+    e.preventDefault();
+    if (!idCardFile || !licenseFile) {
+      setUploadError('Please upload both your ID Card/Passport and Driving License to proceed.');
+      return;
+    }
+    setUploadError('');
+    setIsBookingConfirmed(true);
+  };
+
   // Related Cars display list
   const relatedCars = useMemo(() => {
     return fleetCars
@@ -226,10 +359,6 @@ export default function CarDetailsPage() {
       .map(toCarCardShape);
   }, [fleetCars, car.slug]);
 
-  // Set today's date limit on calendar inputs
-  const todayDateStr = useMemo(() => {
-    return new Date().toISOString().split('T')[0];
-  }, []);
 
   // Handle Lightbox keyboard events
   useEffect(() => {
@@ -537,13 +666,23 @@ export default function CarDetailsPage() {
                     <Calendar size={12} style={{ marginRight: '6px' }} />
                     Select Pickup Date
                   </label>
-                  <input
+                  <DatePicker
                     id="pickup-date"
-                    type="date"
-                    min={todayDateStr}
-                    className="reservation-input"
                     value={pickupDate}
-                    onChange={(e) => setPickupDate(e.target.value)}
+                    onChange={(val) => {
+                      setPickupDate(val);
+                      if (returnDate && val > returnDate) {
+                        setReturnDate('');
+                      } else if (returnDate && val) {
+                        const hasOverlap = bookedDates.some(d => d > val && d <= returnDate);
+                        if (hasOverlap) {
+                          setReturnDate('');
+                        }
+                      }
+                    }}
+                    minDate={todayDateStr}
+                    bookedDates={bookedDates}
+                    placeholder="Select Pickup Date..."
                   />
                 </div>
 
@@ -552,13 +691,14 @@ export default function CarDetailsPage() {
                     <Calendar size={12} style={{ marginRight: '6px' }} />
                     Select Return Date
                   </label>
-                  <input
+                  <DatePicker
                     id="return-date"
-                    type="date"
-                    min={pickupDate || todayDateStr}
-                    className="reservation-input"
                     value={returnDate}
-                    onChange={(e) => setReturnDate(e.target.value)}
+                    onChange={setReturnDate}
+                    minDate={pickupDate || todayDateStr}
+                    maxDate={maxReturnDateStr}
+                    bookedDates={bookedDates}
+                    placeholder="Select Return Date..."
                   />
                 </div>
 
@@ -601,6 +741,16 @@ export default function CarDetailsPage() {
                     <span>Choose pickup and return dates to inspect custom price invoices.</span>
                   </div>
                 )}
+
+                {/* Book Now trigger */}
+                <button
+                  type="button"
+                  className="reservation-book-now-btn"
+                  onClick={handleBookNowClick}
+                >
+                  <span>Book Now</span>
+                  <Calendar size={16} />
+                </button>
 
                 {/* Submit Booking trigger */}
                 <a
@@ -707,6 +857,148 @@ export default function CarDetailsPage() {
                 <img src={img} alt={`Thumb ${idx + 1}`} />
               </button>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Book Now Summary & Upload Modal */}
+      {isBookModalOpen && (
+        <div className="book-modal-overlay" onClick={() => setIsBookModalOpen(false)}>
+          <div className="book-modal-content glass-panel" onClick={(e) => e.stopPropagation()}>
+            <button 
+              type="button" 
+              className="book-modal-close-btn"
+              onClick={() => setIsBookModalOpen(false)}
+              aria-label="Close modal"
+            >
+              <X size={20} />
+            </button>
+            
+            <h3 className="book-modal-title">Booking Confirmation</h3>
+            <p className="book-modal-subtitle">Review your luxury reservation & upload required documents.</p>
+            
+            {isBookingConfirmed ? (
+              <div className="booking-success-message animate-fade-in">
+                <CheckCircle size={48} className="success-icon" />
+                <h4>Reservation Confirmed!</h4>
+                <p>Your documents have been uploaded successfully. Our VIP concierge will contact you shortly to finalize your booking.</p>
+                <button 
+                  type="button" 
+                  className="book-modal-action-btn"
+                  onClick={() => {
+                    setIsBookModalOpen(false);
+                    setIsBookingConfirmed(false);
+                    setIdCardFile(null);
+                    setLicenseFile(null);
+                  }}
+                >
+                  Close Window
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleConfirmBooking} className="book-modal-form">
+                {uploadError && (
+                  <div className="book-modal-error animate-fade-in">
+                    <Info size={14} style={{ marginRight: 6 }} />
+                    <span>{uploadError}</span>
+                  </div>
+                )}
+
+                {/* Summary Section */}
+                <div className="book-modal-summary">
+                  <div className="summary-car-details">
+                    <span className="summary-brand">{car.brand}</span>
+                    <h4 className="summary-name">{car.name}</h4>
+                    <span className="summary-category">{car.category}</span>
+                  </div>
+                  
+                  <div className="summary-pricing">
+                    <div className="summary-price-row">
+                      <span>Rental Duration:</span>
+                      <strong>{billingInfo?.days} {billingInfo?.days === 1 ? 'Day' : 'Days'}</strong>
+                    </div>
+                    <div className="summary-price-row">
+                      <span>Daily Rate:</span>
+                      <strong>{billingInfo?.discountedDailyRate.toLocaleString()} AED / day</strong>
+                    </div>
+                    {billingInfo?.discountAmount > 0 && (
+                      <div className="summary-price-row discount">
+                        <span>Volume Discount:</span>
+                        <strong>-{billingInfo.discountAmount.toLocaleString()} AED</strong>
+                      </div>
+                    )}
+                    <div className="summary-price-row total">
+                      <span>Total Amount (incl. VAT):</span>
+                      <strong>{billingInfo?.total.toLocaleString()} AED</strong>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Document Uploads */}
+                <div className="book-modal-uploads">
+                  <h5 className="uploads-title">Required Documents</h5>
+                  
+                  {/* ID Card */}
+                  <div className="upload-field">
+                    <span className="upload-field-label">National ID Card / Passport Copy</span>
+                    <label htmlFor="upload-id-card" className="upload-dropzone">
+                      <input 
+                        type="file" 
+                        accept="image/*,.pdf" 
+                        onChange={(e) => {
+                          setIdCardFile(e.target.files[0]);
+                          setUploadError('');
+                        }}
+                        style={{ display: 'none' }}
+                        id="upload-id-card"
+                      />
+                      {idCardFile ? (
+                        <div className="upload-success">
+                          <Check size={16} className="checkmark" />
+                          <span>{idCardFile.name}</span>
+                        </div>
+                      ) : (
+                        <div className="upload-placeholder">
+                          <span>Click to upload ID / Passport</span>
+                        </div>
+                      )}
+                    </label>
+                  </div>
+                  
+                  {/* Driving License */}
+                  <div className="upload-field">
+                    <span className="upload-field-label">Valid Driving License Copy</span>
+                    <label htmlFor="upload-license" className="upload-dropzone">
+                      <input 
+                        type="file" 
+                        accept="image/*,.pdf" 
+                        onChange={(e) => {
+                          setLicenseFile(e.target.files[0]);
+                          setUploadError('');
+                        }}
+                        style={{ display: 'none' }}
+                        id="upload-license"
+                      />
+                      {licenseFile ? (
+                        <div className="upload-success">
+                          <Check size={16} className="checkmark" />
+                          <span>{licenseFile.name}</span>
+                        </div>
+                      ) : (
+                        <div className="upload-placeholder">
+                          <span>Click to upload Driving License</span>
+                        </div>
+                      )}
+                    </label>
+                  </div>
+                </div>
+                
+                {/* Confirm Booking Button */}
+                <button type="submit" className="book-modal-action-btn">
+                  Confirm Booking
+                </button>
+              </form>
+            )}
           </div>
         </div>
       )}

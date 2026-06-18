@@ -24,7 +24,7 @@ export const brands = [
   { 
     name: 'Rolls-Royce', 
     slug: 'rolls-royce', 
-    logoSlug: 'rollsroyce', 
+    logoSlug: 'rolls-royce', 
     domain: 'rolls-roycemotorcars.com',
     tagline: 'The Benchmark of Luxury & Effortless Grace',
     description: 'Crafted for those who define the world, Rolls-Royce offers unparalleled comfort, whisper-quiet V12 engines, and bespoke hand-built craftsmanship. It is not just a car; it is a sanctuary on wheels.',
@@ -68,7 +68,7 @@ export const brands = [
   { 
     name: 'Aston Martin', 
     slug: 'aston-martin', 
-    logoSlug: 'astonmartin', 
+    logoSlug: 'aston-martin', 
     domain: 'astonmartin.com',
     tagline: 'The Beautiful Thrill of British Heritage',
     description: 'Famous for its association with secret agents and cinematic beauty, Aston Martin merges sculptural bodywork with roaring V8 and V12 exhaust notes to deliver the ultimate grand tourer experience.',
@@ -79,7 +79,7 @@ export const brands = [
   { 
     name: 'Mercedes-Benz', 
     slug: 'mercedes-benz', 
-    logoSlug: 'mercedes', 
+    logoSlug: 'mercedes-benz', 
     domain: 'mercedes-benz.com',
     tagline: 'The Best or Nothing',
     description: 'From the raw luxury of the S-Class to the hand-built twin-turbo engines of AMG, Mercedes-Benz represents the pinnacle of automotive engineering, safety innovation, and refined prestige.',
@@ -145,7 +145,7 @@ export const brands = [
   { 
     name: 'Land Rover', 
     slug: 'land-rover', 
-    logoSlug: 'landrover', 
+    logoSlug: 'land-rover', 
     domain: 'landrover.com',
     tagline: 'Above and Beyond',
     description: 'Combining extreme off-road capability with first-class airport lounge luxury, Range Rover and Land Rover models are built to conquer any terrain in absolute, uninterrupted comfort.',

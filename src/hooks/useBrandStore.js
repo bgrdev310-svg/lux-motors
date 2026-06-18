@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { brands as defaultBrands } from '../data/brands';
 
-const STORAGE_KEY = 'luxmotors-brands-v1';
+const STORAGE_KEY = 'luxmotors-brands-v2';
 
 function initBrands(defaults) {
   return defaults.map((b) => ({
@@ -20,9 +20,41 @@ export function loadBrands() {
       if (Array.isArray(parsed) && parsed.length > 0) return parsed;
     }
   } catch {
-    /* fall through to defaults */
+    /* fall through */
   }
-  return initBrands(defaultBrands);
+
+  // Attempt migration from v1 to update default brands with their correct logo slugs
+  try {
+    const rawV1 = localStorage.getItem('luxmotors-brands-v1');
+    if (rawV1) {
+      const parsedV1 = JSON.parse(rawV1);
+      if (Array.isArray(parsedV1) && parsedV1.length > 0) {
+        const updated = parsedV1.map((brand) => {
+          if (brand.slug === 'rolls-royce' && brand.logoSlug === 'rollsroyce') {
+            return { ...brand, logoSlug: 'rolls-royce' };
+          }
+          if (brand.slug === 'aston-martin' && brand.logoSlug === 'astonmartin') {
+            return { ...brand, logoSlug: 'aston-martin' };
+          }
+          if (brand.slug === 'mercedes-benz' && brand.logoSlug === 'mercedes') {
+            return { ...brand, logoSlug: 'mercedes-benz' };
+          }
+          if (brand.slug === 'land-rover' && brand.logoSlug === 'landrover') {
+            return { ...brand, logoSlug: 'land-rover' };
+          }
+          return brand;
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        return updated;
+      }
+    }
+  } catch {
+    /* fall through */
+  }
+
+  const initial = initBrands(defaultBrands);
+  persistBrands(initial);
+  return initial;
 }
 
 export function persistBrands(brands) {

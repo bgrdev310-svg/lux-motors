@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { FileText, Clock, CheckCircle, Plus, Edit, HelpCircle, Contact, Calendar, TrendingUp, TrendingDown, ArrowUpRight, DollarSign, Car } from 'lucide-react';
+import { FileText, Clock, CheckCircle, Plus, Edit, HelpCircle, Contact, Calendar, TrendingUp, TrendingDown, ArrowUpRight, DollarSign, Car, UserPlus, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { AreaChart, Area, ResponsiveContainer } from 'recharts';
 
@@ -27,10 +27,10 @@ const recentBookings = [
 ];
 
 const quickActions = [
-  { label: 'Schedule', icon: <Calendar size={24} />, color: '#c9a84c', path: '/admin/calendar' },
-  { label: 'Edit Home', icon: <Edit size={24} />, color: '#25D366', path: '/admin/homepage-manager' },
-  { label: 'Add FAQ', icon: <HelpCircle size={24} />, color: '#f59e0b', path: '/admin/faq-manager' },
-  { label: 'Contacts', icon: <Contact size={24} />, color: '#e8d5a3', path: '/admin/contact-manager' },
+  { label: 'New Booking', icon: <Plus size={24} />, color: '#c9a84c', path: '/admin/requests' },
+  { label: 'Add Vehicle', icon: <Car size={24} />, color: '#25D366', path: '/admin/fleet' },
+  { label: 'Add Client', icon: <UserPlus size={24} />, color: '#3b82f6', path: '/admin/requests' },
+  { label: 'Schedule Delivery', icon: <Calendar size={24} />, color: '#e8d5a3', path: '/admin/calendar' },
 ];
 
 const upcomingSchedule = [
@@ -44,6 +44,7 @@ export default function DashboardPage() {
 
   return (
     <motion.div initial="initial" animate="animate" transition={{ staggerChildren: 0.08 }}>
+      {/* HEADER */}
       <motion.div className="admin-page-header" variants={fadeUp} transition={{ duration: 0.4 }}>
         <div>
           <h1 className="admin-page-title">Welcome back, Admin 👋</h1>
@@ -54,6 +55,7 @@ export default function DashboardPage() {
         </button>
       </motion.div>
 
+      {/* ROW 1: KPI Cards */}
       <motion.div className="admin-grid-4 admin-section-gap" variants={fadeUp} transition={{ duration: 0.4, delay: 0.1 }}>
         {stats.map((stat, i) => (
           <div key={i} className="admin-card" style={{ overflow: 'hidden', position: 'relative' }}>
@@ -88,6 +90,7 @@ export default function DashboardPage() {
         ))}
       </motion.div>
 
+      {/* ROW 2: Recent Bookings & Today's Schedule + Quick Actions */}
       <motion.div className="admin-grid-2 admin-section-gap admin-responsive-grid-main" style={{ gridTemplateColumns: '1.5fr 1fr' }} variants={fadeUp} transition={{ duration: 0.4, delay: 0.2 }}>
         <div className="admin-card">
           <div className="admin-card-header">
@@ -163,6 +166,102 @@ export default function DashboardPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* ROW 3: Fleet Status & Urgent Alerts */}
+      <motion.div className="admin-grid-2 admin-section-gap admin-responsive-grid-main" variants={fadeUp} transition={{ duration: 0.4, delay: 0.3 }}>
+        {/* Fleet Status */}
+        <div className="admin-card">
+          <h2 className="admin-card-title" style={{ marginBottom: 20 }}>Fleet Status</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
+            <div style={{ padding: '16px', borderRadius: 'var(--admin-radius-sm)', background: 'rgba(37, 211, 102, 0.04)', border: '1px solid rgba(37, 211, 102, 0.1)', display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <div style={{ fontSize: '0.8rem', color: 'var(--admin-text-secondary)', fontWeight: 500 }}>Available</div>
+              <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#25D366' }}>28</div>
+            </div>
+            <div style={{ padding: '16px', borderRadius: 'var(--admin-radius-sm)', background: 'rgba(201, 168, 76, 0.04)', border: '1px solid rgba(201, 168, 76, 0.1)', display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <div style={{ fontSize: '0.8rem', color: 'var(--admin-text-secondary)', fontWeight: 500 }}>Rented</div>
+              <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#c9a84c' }}>34</div>
+            </div>
+            <div style={{ padding: '16px', borderRadius: 'var(--admin-radius-sm)', background: 'rgba(59, 130, 246, 0.04)', border: '1px solid rgba(59, 130, 246, 0.1)', display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <div style={{ fontSize: '0.8rem', color: 'var(--admin-text-secondary)', fontWeight: 500 }}>Reserved</div>
+              <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#3b82f6' }}>9</div>
+            </div>
+            <div style={{ padding: '16px', borderRadius: 'var(--admin-radius-sm)', background: 'rgba(244, 63, 94, 0.04)', border: '1px solid rgba(244, 63, 94, 0.1)', display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <div style={{ fontSize: '0.8rem', color: 'var(--admin-text-secondary)', fontWeight: 500 }}>Maintenance</div>
+              <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#f43f5e' }}>3</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Urgent Alerts */}
+        <div className="admin-card">
+          <h2 className="admin-card-title" style={{ marginBottom: 20 }}>Urgent Alerts</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ padding: '12px 16px', borderRadius: 'var(--admin-radius-sm)', background: 'rgba(244, 63, 94, 0.06)', border: '1px solid rgba(244, 63, 94, 0.15)', display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ color: '#f43f5e' }}><AlertTriangle size={20} /></div>
+              <div style={{ fontSize: '0.88rem', fontWeight: 600, color: 'rgba(255,255,255,0.95)' }}>2 vehicles due maintenance</div>
+            </div>
+            <div style={{ padding: '12px 16px', borderRadius: 'var(--admin-radius-sm)', background: 'rgba(245, 158, 11, 0.06)', border: '1px solid rgba(245, 158, 11, 0.15)', display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ color: '#f59e0b' }}><AlertTriangle size={20} /></div>
+              <div style={{ fontSize: '0.88rem', fontWeight: 600, color: 'rgba(255,255,255,0.95)' }}>1 payment overdue</div>
+            </div>
+            <div style={{ padding: '12px 16px', borderRadius: 'var(--admin-radius-sm)', background: 'rgba(201, 168, 76, 0.06)', border: '1px solid rgba(201, 168, 76, 0.15)', display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ color: '#c9a84c' }}><AlertTriangle size={20} /></div>
+              <div style={{ fontSize: '0.88rem', fontWeight: 600, color: 'rgba(255,255,255,0.95)' }}>1 VIP booking requires approval</div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* ROW 4: Upcoming Returns & Vehicle Availability Snapshot */}
+      <motion.div className="admin-grid-2 admin-section-gap admin-responsive-grid-main" variants={fadeUp} transition={{ duration: 0.4, delay: 0.4 }}>
+        {/* Upcoming Returns */}
+        <div className="admin-card">
+          <h2 className="admin-card-title" style={{ marginBottom: 20 }}>Upcoming Returns</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {[
+              { vehicle: 'Lamborghini Urus', returnTime: 'Returns at 4:00 PM', urgency: 'today' },
+              { vehicle: 'Ferrari F8', returnTime: 'Returns at 6:30 PM', urgency: 'today' },
+              { vehicle: 'Rolls-Royce Cullinan', returnTime: 'Returns Tomorrow', urgency: 'tomorrow' }
+            ].map((item, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderRadius: 'var(--admin-radius-sm)', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--admin-border)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(201, 168, 76, 0.08)', color: '#c9a84c', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Car size={18} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>{item.vehicle}</div>
+                    <div style={{ fontSize: '0.78rem', color: 'var(--admin-text-secondary)' }}>Dubai Fleet</div>
+                  </div>
+                </div>
+                <div style={{ fontSize: '0.8rem', fontWeight: 600, color: item.urgency === 'today' ? '#f59e0b' : 'var(--admin-text-muted)', background: item.urgency === 'today' ? 'rgba(245, 158, 11, 0.08)' : 'rgba(255,255,255,0.04)', padding: '4px 10px', borderRadius: 12 }}>
+                  {item.returnTime}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Vehicle Availability Snapshot */}
+        <div className="admin-card">
+          <h2 className="admin-card-title" style={{ marginBottom: 20 }}>Vehicle Availability Snapshot</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+            {[
+              { category: 'Supercars', count: 8, color: '#f43f5e' },
+              { category: 'Luxury SUVs', count: 12, color: '#c9a84c' },
+              { category: 'Luxury Sedans', count: 5, color: '#3b82f6' },
+              { category: 'Exotics', count: 3, color: '#a855f7' }
+            ].map((cat, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 'var(--admin-radius-sm)', background: 'rgba(255,255,255,0.01)', border: '1px solid var(--admin-border)' }}>
+                <div style={{ width: 8, height: 28, borderRadius: 4, background: cat.color }} />
+                <div>
+                  <div style={{ fontSize: '1.25rem', fontWeight: 800 }}>{cat.count}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--admin-text-secondary)', fontWeight: 500 }}>{cat.category}</div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </motion.div>

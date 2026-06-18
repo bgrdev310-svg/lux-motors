@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Check, X, Eye, Calendar, User, Phone, Mail, MapPin, Filter, Search, ArrowUpRight } from 'lucide-react';
+import AdminSelect from '../../components/admin/AdminSelect';
 
 const fadeUp = { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 } };
 
@@ -19,6 +20,7 @@ const RequestsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [activeFilter, setActiveFilter] = useState('All');
+  const [selectedConcierge, setSelectedConcierge] = useState('Select Concierge...');
 
   const filtered = useMemo(() => 
     activeFilter === 'All' ? requests : requests.filter(r => r.status === activeFilter.toLowerCase()),
@@ -167,12 +169,16 @@ const RequestsPage = () => {
 
               <div className="admin-form-group">
                 <label className="admin-label">Assign Concierge</label>
-                <select className="admin-input">
-                  <option>Select Concierge...</option>
-                  <option>VIP Team Alpha</option>
-                  <option>VIP Team Bravo</option>
-                  <option>Senior Concierge — Khalid</option>
-                </select>
+                <AdminSelect
+                  value={selectedConcierge}
+                  onChange={setSelectedConcierge}
+                  options={[
+                    'Select Concierge...',
+                    'VIP Team Alpha',
+                    'VIP Team Bravo',
+                    'Senior Concierge — Khalid'
+                  ]}
+                />
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 22 }}>

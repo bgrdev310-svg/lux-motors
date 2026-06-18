@@ -36,6 +36,7 @@ export default function BrandManagerModal({ isOpen, onClose }) {
   const [editingBrand, setEditingBrand] = useState(null);
   const [editForm, setEditForm] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [brokenLogos, setBrokenLogos] = useState(new Set());
 
   const openEdit = (brand) => {
     setEditForm(JSON.parse(JSON.stringify(brand)));
@@ -132,14 +133,21 @@ export default function BrandManagerModal({ isOpen, onClose }) {
                     className={`brand-modal__card ${brand.visible === false ? 'brand-modal__card--hidden' : ''} ${brand.available === false ? 'brand-modal__card--unavailable' : ''}`}
                   >
                     <div className="brand-modal__card-logo-area">
-                      <img
-                        src={getLogoUrl(brand)}
-                        alt={`${brand.name} logo`}
-                        loading="lazy"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                        }}
-                      />
+                      {brokenLogos.has(brand.slug) ? (
+                        <div className="brand-modal__card-logo-fallback">
+                          {brand.name?.charAt(0) || '?'}
+                        </div>
+                      ) : (
+                        <img
+                          src={getLogoUrl(brand)}
+                          alt={`${brand.name} logo`}
+                          loading="lazy"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            setBrokenLogos((prev) => new Set(prev).add(brand.slug));
+                          }}
+                        />
+                      )}
                     </div>
                     <div className="brand-modal__card-body">
                       <div className="brand-modal__card-name">{brand.name}</div>

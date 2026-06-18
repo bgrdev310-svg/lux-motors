@@ -1,5 +1,6 @@
 /* ===== Brand Manager Modal — Matches Fleet Admin Glassmorphism ===== */
 
+.fleet-admin .brand-modal__backdrop,
 .brand-modal__backdrop {
   position: fixed;
   inset: 0;
@@ -14,6 +15,7 @@
   to { opacity: 1; }
 }
 
+.fleet-admin .brand-modal,
 .brand-modal {
   position: fixed;
   inset: 0;
@@ -110,8 +112,8 @@
 /* Brand grid */
 .brand-modal__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
 }
 
 /* Individual brand card */
@@ -152,25 +154,44 @@
 
 /* Card logo area */
 .brand-modal__card-logo-area {
-  height: 80px;
+  height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 16px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.015) 50%, rgba(0, 0, 0, 0.25) 100%);
+  padding: 20px 24px;
   position: relative;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .brand-modal__card-logo-area img {
-  max-height: 48px;
-  max-width: 100px;
+  max-height: 64px;
+  max-width: 140px;
   object-fit: contain;
-  filter: brightness(0.95);
+  filter: brightness(1) drop-shadow(0 0 6px rgba(255, 255, 255, 0.18));
   transition: transform 0.3s ease;
 }
 
 .brand-modal__card:hover .brand-modal__card-logo-area img {
-  transform: scale(1.08);
+  transform: scale(1.1);
+}
+
+/* Fallback monogram for missing logos */
+.brand-modal__card-logo-fallback {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.2) 0%, rgba(201, 168, 76, 0.08) 100%);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #c9a84c;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  flex-shrink: 0;
 }
 
 /* Card body */

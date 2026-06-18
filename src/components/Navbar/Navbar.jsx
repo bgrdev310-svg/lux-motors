@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
-import { Menu, X, Phone, MessageCircle, Warehouse } from 'lucide-react';
+import { Menu, X, Phone, MessageCircle, Warehouse, User } from 'lucide-react';
 
 const navLinks = [
   { label: 'Home', href: '/' },
@@ -103,15 +103,13 @@ export default function Navbar() {
               <Phone size={16} />
               <span>+971 50 992 4247</span>
             </a>
-            <a
-              href="https://wa.me/971509924247"
+            <Link
+              to="/login"
               className="navbar__cta"
-              target="_blank"
-              rel="noopener noreferrer"
             >
-              <MessageCircle size={16} />
-              <span>Book Now</span>
-            </a>
+              <User size={16} />
+              <span>Login</span>
+            </Link>
             <button
               className="navbar__menu-btn"
               onClick={() => setMenuOpen(!menuOpen)}

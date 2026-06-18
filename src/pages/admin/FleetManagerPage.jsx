@@ -6,8 +6,10 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useFleetStore } from '../../hooks/useFleetStore';
+import { useBrandStore } from '../../hooks/useBrandStore';
 import { createEmptyCar, FLEET_CATEGORIES, slugify } from '../../data/defaultFleet';
 import BrandManagerModal from './BrandManagerModal';
+import AdminSelect from '../../components/admin/AdminSelect';
 import './FleetManagerPage.css';
 
 const TABS = [
@@ -36,6 +38,16 @@ export default function FleetManagerPage() {
   const [activeTab, setActiveTab] = useState('basic');
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [brandModalOpen, setBrandModalOpen] = useState(false);
+  const { brands, getLogoUrl } = useBrandStore();
+  const [brandSelectorOpen, setBrandSelectorOpen] = useState(false);
+  const [brandSearch, setBrandSearch] = useState('');
+  const [customBrandInput, setCustomBrandInput] = useState('');
+  const [brokenSelectorLogos, setBrokenSelectorLogos] = useState(new Set());
+
+  const filteredBrands = useMemo(() => {
+    const q = brandSearch.toLowerCase();
+    return brands.filter((b) => b.name.toLowerCase().includes(q));
+  }, [brands, brandSearch]);
 
   const stats = useMemo(() => ({
     total: cars.length,
@@ -301,13 +313,22 @@ export default function FleetManagerPage() {
                     <div className="fleet-admin__field-row">
                       <div className="fleet-admin__field">
                         <label className="fleet-admin__label">Brand</label>
-                        <input className="fleet-admin__input" value={form.brand} onChange={(e) => patchForm('brand', e.target.value)} placeholder="FERRARI" />
+                        <input
+                          className="fleet-admin__input"
+                          value={form.brand || ''}
+                          onClick={() => setBrandSelectorOpen(true)}
+                          readOnly
+                          placeholder="Select Brand..."
+                          style={{ cursor: 'pointer', caretColor: 'transparent' }}
+                        />
                       </div>
                       <div className="fleet-admin__field">
                         <label className="fleet-admin__label">Category</label>
-                        <select className="fleet-admin__select" value={form.category} onChange={(e) => patchForm('category', e.target.value)}>
-                          {FLEET_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
-                        </select>
+                        <AdminSelect
+                          value={form.category}
+                          onChange={(val) => patchForm('category', val)}
+                          options={FLEET_CATEGORIES}
+                        />
                       </div>
                     </div>
                     <div className="fleet-admin__field">
@@ -540,6 +561,105 @@ export default function FleetManagerPage() {
       <AnimatePresence>
         {brandModalOpen && (
           <BrandManagerModal isOpen={brandModalOpen} onClose={() => setBrandModalOpen(false)} />
+        )}
+      </AnimatePresence>
+
+      {/* Brand Selector Modal */}
+      <AnimatePresence>
+        {brandSelectorOpen && (
+          <div className="brand-selector-modal-backdrop" onClick={() => { setBrandSelectorOpen(false); setBrandSearch(''); setCustomBrandInput(''); }}>
+            <motion.div
+              className="brand-selector-modal"
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="brand-selector-modal__header">
+                <h3>Select Vehicle Brand</h3>
+                <button type="button" className="brand-selector-modal__close" onClick={() => { setBrandSelectorOpen(false); setBrandSearch(''); setCustomBrandInput(''); }} aria-label="Close brand selector">
+                  <X size={16} />
+                </button>
+              </div>
+
+              <div className="brand-selector-modal__search">
+                <Search size={16} color="var(--admin-text-muted)" />
+                <input
+                  type="text"
+                  placeholder="Search brands..."
+                  value={brandSearch}
+                  onChange={(e) => setBrandSearch(e.target.value)}
+                />
+              </div>
+
+              <div className="brand-selector-modal__body">
+                <div className="brand-selector-modal__grid">
+                  {filteredBrands.map((b) => (
+                    <button
+                      key={b.slug}
+                      type="button"
+                      className={`brand-selector-modal__card ${form.brand?.toUpperCase() === b.name.toUpperCase() ? 'active' : ''}`}
+                      onClick={() => {
+                        patchForm('brand', b.name.toUpperCase());
+                        setBrandSelectorOpen(false);
+                        setBrandSearch('');
+                        setCustomBrandInput('');
+                      }}
+                    >
+                      <div className="brand-selector-modal__card-logo">
+                        {brokenSelectorLogos.has(b.slug) ? (
+                          <div className="brand-selector-modal__card-logo-fallback">
+                            {b.name?.charAt(0) || '?'}
+                          </div>
+                        ) : (
+                          <img
+                            src={getLogoUrl(b)}
+                            alt={b.name}
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              setBrokenSelectorLogos((prev) => new Set(prev).add(b.slug));
+                            }}
+                          />
+                        )}
+                      </div>
+                      <div className="brand-selector-modal__card-name">{b.name}</div>
+                    </button>
+                  ))}
+
+                  {filteredBrands.length === 0 && (
+                    <div className="brand-selector-modal__empty">
+                      No brands match your search.
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="brand-selector-modal__footer">
+                <div className="brand-selector-modal__custom-input">
+                  <input
+                    type="text"
+                    placeholder="Or type a custom brand name..."
+                    value={customBrandInput}
+                    onChange={(e) => setCustomBrandInput(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="admin-btn"
+                    onClick={() => {
+                      if (customBrandInput.trim()) {
+                        patchForm('brand', customBrandInput.trim().toUpperCase());
+                        setBrandSelectorOpen(false);
+                        setBrandSearch('');
+                        setCustomBrandInput('');
+                      }
+                    }}
+                  >
+                    Use Custom
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>

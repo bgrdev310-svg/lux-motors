@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import './RequestStatusPage.css';
 import { DEFAULT_FLEET, toCarCardShape } from '../../data/defaultFleet';
+import { loadFleet } from '../../hooks/useFleetStore';
 import CarCard from '../../components/CarCard/CarCard';
 
 // Formatting date helper
@@ -102,7 +103,8 @@ export default function RequestStatusPage() {
     setRequests(JSON.parse(storedReqs));
 
     // Load Favorites
-    const favList = DEFAULT_FLEET.filter(
+    const fleetCars = loadFleet();
+    const favList = fleetCars.filter(
       (car) => localStorage.getItem(`liked-${car.slug}`) === 'true'
     );
     setFavorites(favList);
@@ -252,7 +254,8 @@ export default function RequestStatusPage() {
               ) : (
                 <div className="garage-requests-list">
                   {requests.map((request) => {
-                    const carData = DEFAULT_FLEET.find((c) => c.slug === request.carSlug);
+                    const fleetCars = loadFleet();
+                    const carData = fleetCars.find((c) => c.slug === request.carSlug) || DEFAULT_FLEET.find((c) => c.slug === request.carSlug);
                     if (!carData) return null;
 
                     const isExpanded = expandedRequestId === request.id;
@@ -267,78 +270,60 @@ export default function RequestStatusPage() {
                           '--card-theme-rgb': carData.themeRgb || '201, 168, 76'
                         }}
                       >
-                        {/* Summary Header Row */}
-                        <div className="garage-request-card__summary">
-                          <div className="garage-request-card__car-info">
-                            <div className="garage-request-card__showcase">
-                              <div className="car-glow-backdrop" />
-                              <img 
-                                src={carData.studioImage || carData.image} 
-                                alt={carData.name} 
-                                className="car-showcase-img"
-                              />
-                              <div 
-                                className="car-reflection" 
-                                style={{ backgroundImage: `url(${carData.studioImage || carData.image})` }} 
-                              />
+                        {/* Premium Image Box Container */}
+                        <div className="garage-request-card__image-wrapper">
+                          <img 
+                            src={carData.image} 
+                            alt={carData.name} 
+                            className="garage-request-card__image"
+                            loading="lazy"
+                          />
+                          <div className="garage-request-card__image-overlay">
+                            <span className="garage-request-card__category">{carData.category}</span>
+                            <span className={`status-pill ${statusConfig.className}`}>
+                              <span className="status-pulse-dot" />
+                              {statusConfig.label}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Card Content Area */}
+                        <div className="garage-request-card__content">
+                          <div className="garage-request-card__header">
+                            <div>
+                              <span className="garage-request-card__brand">{carData.brand}</span>
+                              <h3 className="garage-request-card__name">{carData.name}</h3>
                             </div>
-                            <div className="car-meta-info">
-                              <span className="car-brand-tag">{carData.brand}</span>
-                              <h3 className="car-model-name">{carData.name}</h3>
-                              <div className="car-request-meta">
-                                <span className="request-id-badge">
-                                  <Hash size={11} className="meta-icon" />
-                                  <span>{request.id}</span>
-                                </span>
-                                <span className="request-date-badge">
-                                  <CalendarRange size={11} className="meta-icon" />
-                                  <span>Submitted: {formatDate(request.submittedAt)}</span>
-                                </span>
-                              </div>
+                            <span className="garage-request-card__id-badge">
+                              <Hash size={11} className="meta-icon" />
+                              <span>{request.id}</span>
+                            </span>
+                          </div>
+
+                          {/* Quick Rental Info Summary */}
+                          <div className="garage-request-card__stats">
+                            <div className="garage-request-card__stat-row">
+                              <span className="garage-request-card__stat-label">Submitted</span>
+                              <span className="garage-request-card__stat-value">{formatDate(request.submittedAt)}</span>
+                            </div>
+                            <div className="garage-request-card__stat-row">
+                              <span className="garage-request-card__stat-label">Duration</span>
+                              <span className="garage-request-card__stat-value">{request.days} Days</span>
+                            </div>
+                            <div className="garage-request-card__stat-row">
+                              <span className="garage-request-card__stat-label">Total Cost</span>
+                              <span className="garage-request-card__stat-value cost">{request.totalCost.toLocaleString()} AED</span>
                             </div>
                           </div>
 
-                          {/* Quick Specs Dashboard */}
-                          <div className="garage-request-card__specs-panel">
-                            <div className="mini-spec-item">
-                              <span className="mini-spec-label">POWER</span>
-                              <span className="mini-spec-value">
-                                <Zap size={10} className="mini-spec-icon" />
-                                {carData.specs.power} HP
-                              </span>
-                            </div>
-                            <div className="mini-spec-divider" />
-                            <div className="mini-spec-item">
-                              <span className="mini-spec-label">ACCEL</span>
-                              <span className="mini-spec-value">
-                                <Activity size={10} className="mini-spec-icon" />
-                                {carData.specs.acceleration}s
-                              </span>
-                            </div>
-                            <div className="mini-spec-divider" />
-                            <div className="mini-spec-item">
-                              <span className="mini-spec-label">TOP SPEED</span>
-                              <span className="mini-spec-value">
-                                <Gauge size={10} className="mini-spec-icon" />
-                                {carData.specs.topSpeed} km/h
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Status & Action controls */}
-                          <div className="garage-request-card__action-block">
-                            <div className="status-badge-container">
-                              <span className={`status-pill ${statusConfig.className}`}>
-                                <span className="status-pulse-dot" />
-                                {statusConfig.label}
-                              </span>
-                            </div>
+                          {/* Toggle Button */}
+                          <div className="garage-request-card__footer">
                             <button
                               type="button"
                               className="details-toggle-btn"
                               onClick={() => setExpandedRequestId(isExpanded ? '' : request.id)}
                             >
-                              <span>{isExpanded ? 'Hide Details' : 'View Details'}</span>
+                              <span>{isExpanded ? 'Hide Details' : 'View Booking Details'}</span>
                               <ChevronRight size={14} className={`arrow-icon ${isExpanded ? 'down' : ''}`} />
                             </button>
                           </div>
@@ -347,10 +332,10 @@ export default function RequestStatusPage() {
                         {/* Collapsible Details Area */}
                         {isExpanded && (
                           <div className="garage-request-card__details animate-fade-in">
-                            <div className="garage-details-grid">
+                            <div className="garage-details-sections">
                               
-                              {/* Left side: Timeline Progress */}
-                              <div className="garage-details-col garage-details-col--progress glass">
+                              {/* Section 1: Timeline Progress */}
+                              <div className="garage-details-section">
                                 <h4>Request Status Progress</h4>
                                 <div className="garage-timeline">
                                   <div className="garage-timeline-step done">
@@ -395,9 +380,9 @@ export default function RequestStatusPage() {
                                 )}
                               </div>
 
-                              {/* Right side: Detailed Invoice & Booking Data */}
-                              <div className="garage-details-col garage-details-col--invoice glass">
-                                <h4>Rental Invoice details</h4>
+                              {/* Section 2: Detailed Invoice & Booking Data */}
+                              <div className="garage-details-section">
+                                <h4>Rental Invoice Details</h4>
                                 <dl className="garage-dl">
                                   <div>
                                     <dt>
@@ -435,21 +420,22 @@ export default function RequestStatusPage() {
                                     <dd>{request.totalCost.toLocaleString()} AED</dd>
                                   </div>
                                 </dl>
+                              </div>
 
-                                <div className="garage-action-links">
-                                  <a
-                                    href={`https://wa.me/971509924247?text=Hello%20Lux%20Motors!%20Checking%20status%20for%20booking%20ID%20${request.id}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="concierge-whatsapp-btn"
-                                  >
-                                    <MessageSquare size={14} />
-                                    <span>Chat live with concierge</span>
-                                  </a>
-                                  <Link to={`/fleet/${carData.slug}`} className="view-car-btn">
-                                    <span>Review Specs</span>
-                                  </Link>
-                                </div>
+                              {/* Action Buttons */}
+                              <div className="garage-action-links-vertical">
+                                <a
+                                  href={`https://wa.me/971509924247?text=Hello%20Lux%20Motors!%20Checking%20status%20for%20booking%20ID%20${request.id}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="concierge-whatsapp-btn"
+                                >
+                                  <MessageSquare size={14} />
+                                  <span>Chat live with concierge</span>
+                                </a>
+                                <Link to={`/fleet/${carData.slug}`} className="view-car-btn">
+                                  <span>Review Specs</span>
+                                </Link>
                               </div>
 
                             </div>

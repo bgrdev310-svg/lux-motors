@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Save, User, Lock, Bell, Globe, Shield, Camera } from 'lucide-react';
+import AdminSelect from '../../components/admin/AdminSelect';
 
 const fadeUp = { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 } };
 
@@ -20,6 +21,8 @@ const notificationSettings = [
 
 const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState('profile');
+  const [language, setLanguage] = useState('English');
+  const [timezone, setTimezone] = useState('UTC +2:00 (Cairo)');
 
   return (
     <motion.div initial="initial" animate="animate" transition={{ staggerChildren: 0.08 }}>
@@ -133,20 +136,24 @@ const SettingsPage = () => {
               <h2 className="admin-card-title" style={{ marginBottom: 24 }}>General Settings</h2>
               <div className="admin-form-group">
                 <label className="admin-label">Language</label>
-                <select className="admin-input">
-                  <option>English</option>
-                  <option>French</option>
-                  <option>Arabic</option>
-                </select>
+                <AdminSelect
+                  value={language}
+                  onChange={setLanguage}
+                  options={['English', 'French', 'Arabic']}
+                />
               </div>
               <div className="admin-form-group">
                 <label className="admin-label">Timezone</label>
-                <select className="admin-input">
-                  <option>UTC -7:00 (Mountain Time - Colorado)</option>
-                  <option>UTC +2:00 (Cairo)</option>
-                  <option>UTC +0:00 (London)</option>
-                  <option>UTC -5:00 (New York)</option>
-                </select>
+                <AdminSelect
+                  value={timezone}
+                  onChange={setTimezone}
+                  options={[
+                    'UTC -7:00 (Mountain Time - Colorado)',
+                    'UTC +2:00 (Cairo)',
+                    'UTC +0:00 (London)',
+                    'UTC -5:00 (New York)'
+                  ]}
+                />
               </div>
             </div>
           )}

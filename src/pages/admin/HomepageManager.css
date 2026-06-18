@@ -371,6 +371,28 @@
   opacity: 0.6;
 }
 
+/* Disabled/Read-Only Styles */
+.hm-input:disabled,
+.hm-textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+  color: var(--admin-text-secondary);
+}
+
+.hm-input-wrap:has(input:disabled),
+.hm-textarea-wrap:has(textarea:disabled) {
+  opacity: 0.6;
+  background: rgba(255, 255, 255, 0.005) !important;
+  border-color: rgba(255, 255, 255, 0.03) !important;
+  box-shadow: none !important;
+}
+
+.hm-input-wrap:has(input:disabled):hover,
+.hm-textarea-wrap:has(textarea:disabled):hover {
+  border-color: rgba(255, 255, 255, 0.03) !important;
+  background: rgba(255, 255, 255, 0.005) !important;
+}
+
 /* ── Upload Area ── */
 .hm-upload-container {
   display: grid;
@@ -827,3 +849,50 @@
     margin-right: auto;
   }
 }
+
+/* Edit Section Buttons & Disabled Upload Zone */
+.hm-section-edit-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  transition: var(--admin-transition);
+  cursor: pointer;
+}
+
+.hm-section-edit-btn--active {
+  background: rgba(201, 168, 76, 0.15) !important;
+  border: 1px solid rgba(201, 168, 76, 0.3) !important;
+  color: #c9a84c !important;
+}
+
+.hm-section-edit-btn--inactive {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: var(--admin-text-primary) !important;
+}
+
+.hm-section-edit-btn--inactive:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.hm-section-edit-btn--active:hover {
+  background: rgba(201, 168, 76, 0.2) !important;
+}
+
+.hm-upload-zone.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  border-color: rgba(255, 255, 255, 0.02) !important;
+  background: rgba(255, 255, 255, 0.002) !important;
+}
+
+.hm-upload-zone.disabled:hover {
+  border-color: rgba(255, 255, 255, 0.02) !important;
+  background: rgba(255, 255, 255, 0.002) !important;
+}
+

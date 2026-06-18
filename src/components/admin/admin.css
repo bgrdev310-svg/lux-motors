@@ -642,6 +642,15 @@ select.admin-input {
   padding-right: 36px;
 }
 
+/* Style options inside select elements to prevent white-on-white text in Chrome/Windows */
+select.admin-input option,
+.admin-select option,
+.fleet-admin__select option,
+select option {
+  background-color: #0c0c12 !important;
+  color: #ffffff !important;
+}
+
 /* ============================================
    UTILITY CLASSES
    ============================================ */
