@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import React, { memo, useMemo } from 'react';
 import { FileText, Clock, CheckCircle, Plus, Edit, HelpCircle, Contact, Calendar, TrendingUp, TrendingDown, ArrowUpRight, DollarSign, Car, UserPlus, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { AreaChart, Area, ResponsiveContainer } from 'recharts';
@@ -6,11 +6,6 @@ import { AreaChart, Area, ResponsiveContainer } from 'recharts';
 const miniChartData = [
   { v: 20 }, { v: 35 }, { v: 28 }, { v: 45 }, { v: 38 }, { v: 55 }, { v: 48 }, { v: 62 }, { v: 58 }, { v: 72 }, { v: 65 }, { v: 80 },
 ];
-
-const fadeUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-};
 
 const stats = [
   { label: 'Total Bookings', value: '86', trend: '+8%', positive: true, icon: <FileText size={22} />, gradient: 'var(--admin-gradient-1)', color: '#c9a84c' },
@@ -39,13 +34,43 @@ const upcomingSchedule = [
   { time: '04:30 PM', client: 'VIP Concierge', type: 'Ghost Handover — Palm Jumeirah', color: '#f59e0b' },
 ];
 
-export default function DashboardPage() {
+// Memoized mini chart to avoid re-rendering all 4 charts when parent state changes
+const MiniChart = memo(({ color, index }) => (
+  <div style={{ height: 40, width: 80 }}>
+    <ResponsiveContainer width="100%" height="100%">
+      <AreaChart data={miniChartData}>
+        <defs>
+          <linearGradient id={`mini-${index}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={color} stopOpacity={0.3} />
+            <stop offset="100%" stopColor={color} stopOpacity={0} />
+          </linearGradient>
+        </defs>
+        <Area type="monotone" dataKey="v" stroke={color} strokeWidth={2} fill={`url(#mini-${index})`} dot={false} isAnimationActive={false} />
+      </AreaChart>
+    </ResponsiveContainer>
+  </div>
+));
+
+const upcomingReturns = [
+  { vehicle: 'Lamborghini Urus', returnTime: 'Returns at 4:00 PM', urgency: 'today' },
+  { vehicle: 'Ferrari F8', returnTime: 'Returns at 6:30 PM', urgency: 'today' },
+  { vehicle: 'Rolls-Royce Cullinan', returnTime: 'Returns Tomorrow', urgency: 'tomorrow' }
+];
+
+const vehicleCategories = [
+  { category: 'Supercars', count: 8, color: '#f43f5e' },
+  { category: 'Luxury SUVs', count: 12, color: '#c9a84c' },
+  { category: 'Luxury Sedans', count: 5, color: '#3b82f6' },
+  { category: 'Exotics', count: 3, color: '#a855f7' }
+];
+
+export default memo(function DashboardPage() {
   const navigate = useNavigate();
 
   return (
-    <motion.div initial="initial" animate="animate" transition={{ staggerChildren: 0.08 }}>
+    <div>
       {/* HEADER */}
-      <motion.div className="admin-page-header" variants={fadeUp} transition={{ duration: 0.4 }}>
+      <div className="admin-page-header">
         <div>
           <h1 className="admin-page-title">Welcome back, Admin 👋</h1>
           <p className="admin-page-subtitle">Here's what's happening at Lux Motors DXB today.</p>
@@ -53,31 +78,19 @@ export default function DashboardPage() {
         <button type="button" className="admin-btn" onClick={() => navigate('/admin/requests')}>
           <Plus size={18} /> New Booking
         </button>
-      </motion.div>
+      </div>
 
       {/* ROW 1: KPI Cards */}
-      <motion.div className="admin-grid-4 admin-section-gap" variants={fadeUp} transition={{ duration: 0.4, delay: 0.1 }}>
+      <div className="admin-grid-4 admin-section-gap">
         {stats.map((stat, i) => (
           <div key={i} className="admin-card" style={{ overflow: 'hidden', position: 'relative' }}>
-            <div style={{ position: 'absolute', top: -20, right: -20, width: 80, height: 80, background: stat.gradient, opacity: 0.08, borderRadius: '50%', filter: 'blur(20px)' }} />
+            <div style={{ position: 'absolute', top: -20, right: -20, width: 80, height: 80, background: stat.gradient, opacity: 0.08, borderRadius: '50%' }} />
             <div className="stat-widget">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div className="stat-icon" style={{ background: `${stat.color}18`, color: stat.color }}>
                   {stat.icon}
                 </div>
-                <div style={{ height: 40, width: 80 }}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={miniChartData}>
-                      <defs>
-                        <linearGradient id={`mini-${i}`} x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor={stat.color} stopOpacity={0.3} />
-                          <stop offset="100%" stopColor={stat.color} stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <Area type="monotone" dataKey="v" stroke={stat.color} strokeWidth={2} fill={`url(#mini-${i})`} dot={false} />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
+                <MiniChart color={stat.color} index={i} />
               </div>
               <div className="stat-value">{stat.value}</div>
               <div className="stat-label">{stat.label}</div>
@@ -88,10 +101,10 @@ export default function DashboardPage() {
             </div>
           </div>
         ))}
-      </motion.div>
+      </div>
 
       {/* ROW 2: Recent Bookings & Today's Schedule + Quick Actions */}
-      <motion.div className="admin-grid-2 admin-section-gap admin-responsive-grid-main" style={{ gridTemplateColumns: '1.5fr 1fr' }} variants={fadeUp} transition={{ duration: 0.4, delay: 0.2 }}>
+      <div className="admin-grid-2 admin-section-gap admin-responsive-grid-main" style={{ gridTemplateColumns: '1.5fr 1fr' }}>
         <div className="admin-card">
           <div className="admin-card-header">
             <h2 className="admin-card-title">Recent Bookings</h2>
@@ -139,7 +152,6 @@ export default function DashboardPage() {
               }}>
                 <div style={{
                   width: 4, height: 40, borderRadius: 4, background: item.color, flexShrink: 0,
-                  boxShadow: `0 0 10px ${item.color}40`
                 }} />
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>{item.client}</div>
@@ -158,7 +170,6 @@ export default function DashboardPage() {
                   padding: '18px 14px', borderRadius: 'var(--admin-radius-sm)',
                   background: 'rgba(255,255,255,0.03)', border: '1px solid var(--admin-border)',
                   cursor: 'pointer', textAlign: 'center',
-                  transition: 'var(--admin-transition)',
                   display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
                 }}>
                   <div style={{ color: action.color }}>{action.icon}</div>
@@ -168,10 +179,10 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* ROW 3: Fleet Status & Urgent Alerts */}
-      <motion.div className="admin-grid-2 admin-section-gap admin-responsive-grid-main" variants={fadeUp} transition={{ duration: 0.4, delay: 0.3 }}>
+      <div className="admin-grid-2 admin-section-gap admin-responsive-grid-main">
         {/* Fleet Status */}
         <div className="admin-card">
           <h2 className="admin-card-title" style={{ marginBottom: 20 }}>Fleet Status</h2>
@@ -213,19 +224,15 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* ROW 4: Upcoming Returns & Vehicle Availability Snapshot */}
-      <motion.div className="admin-grid-2 admin-section-gap admin-responsive-grid-main" variants={fadeUp} transition={{ duration: 0.4, delay: 0.4 }}>
+      <div className="admin-grid-2 admin-section-gap admin-responsive-grid-main">
         {/* Upcoming Returns */}
         <div className="admin-card">
           <h2 className="admin-card-title" style={{ marginBottom: 20 }}>Upcoming Returns</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {[
-              { vehicle: 'Lamborghini Urus', returnTime: 'Returns at 4:00 PM', urgency: 'today' },
-              { vehicle: 'Ferrari F8', returnTime: 'Returns at 6:30 PM', urgency: 'today' },
-              { vehicle: 'Rolls-Royce Cullinan', returnTime: 'Returns Tomorrow', urgency: 'tomorrow' }
-            ].map((item, i) => (
+            {upcomingReturns.map((item, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderRadius: 'var(--admin-radius-sm)', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--admin-border)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(201, 168, 76, 0.08)', color: '#c9a84c', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -248,12 +255,7 @@ export default function DashboardPage() {
         <div className="admin-card">
           <h2 className="admin-card-title" style={{ marginBottom: 20 }}>Vehicle Availability Snapshot</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
-            {[
-              { category: 'Supercars', count: 8, color: '#f43f5e' },
-              { category: 'Luxury SUVs', count: 12, color: '#c9a84c' },
-              { category: 'Luxury Sedans', count: 5, color: '#3b82f6' },
-              { category: 'Exotics', count: 3, color: '#a855f7' }
-            ].map((cat, i) => (
+            {vehicleCategories.map((cat, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 'var(--admin-radius-sm)', background: 'rgba(255,255,255,0.01)', border: '1px solid var(--admin-border)' }}>
                 <div style={{ width: 8, height: 28, borderRadius: 4, background: cat.color }} />
                 <div>
@@ -264,7 +266,7 @@ export default function DashboardPage() {
             ))}
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
-}
+});

@@ -16,6 +16,12 @@ export default function AdminLayout() {
     setSidebarOpen(false);
   };
 
+  // Toggle .admin-body class on <body> — replaces expensive CSS :has() selector
+  useEffect(() => {
+    document.body.classList.add('admin-body');
+    return () => document.body.classList.remove('admin-body');
+  }, []);
+
   useEffect(() => {
     closeSidebar();
   }, [location.pathname]);

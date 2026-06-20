@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, memo, useCallback } from 'react';
 import { Search, Bell, Menu, Moon, ChevronDown } from 'lucide-react';
 
 const notifications = [
@@ -7,8 +7,12 @@ const notifications = [
   { id: 3, text: 'Fleet pricing updated successfully', time: '3 hours ago', unread: false },
 ];
 
-export default function TopNavbar({ toggleSidebar }) {
+export default memo(function TopNavbar({ toggleSidebar }) {
   const [showNotifications, setShowNotifications] = useState(false);
+
+  const toggleNotifications = useCallback(() => {
+    setShowNotifications(prev => !prev);
+  }, []);
 
   return (
     <div className="admin-topbar">
@@ -34,7 +38,7 @@ export default function TopNavbar({ toggleSidebar }) {
         </button>
 
         <div style={{ position: 'relative' }}>
-          <button type="button" className="admin-icon-btn" onClick={() => setShowNotifications(!showNotifications)} aria-label="Notifications">
+          <button type="button" className="admin-icon-btn" onClick={toggleNotifications} aria-label="Notifications">
             <Bell size={18} />
             <span style={{
               position: 'absolute', top: 6, right: 6,
@@ -46,7 +50,7 @@ export default function TopNavbar({ toggleSidebar }) {
           {showNotifications && (
             <div className="admin-notif-dropdown" style={{
               position: 'absolute', top: '110%', right: 0, width: 340,
-              background: 'rgba(8, 8, 12, 0.98)', backdropFilter: 'blur(20px)',
+              background: 'rgba(8, 8, 12, 0.99)',
               border: '1px solid var(--admin-border)', borderRadius: 'var(--admin-radius)',
               boxShadow: 'var(--admin-shadow-lg)', zIndex: 100, overflow: 'hidden'
             }}>
@@ -57,7 +61,7 @@ export default function TopNavbar({ toggleSidebar }) {
               {notifications.map(n => (
                 <div key={n.id} style={{
                   padding: '14px 20px', borderBottom: '1px solid rgba(255,255,255,0.03)',
-                  cursor: 'pointer', transition: 'background 0.2s',
+                  cursor: 'pointer',
                   background: n.unread ? 'rgba(201, 168, 76, 0.04)' : 'transparent',
                 }}>
                   <div style={{ fontSize: '0.88rem', marginBottom: 4, color: n.unread ? 'var(--admin-text-primary)' : 'var(--admin-text-secondary)' }}>
@@ -85,4 +89,5 @@ export default function TopNavbar({ toggleSidebar }) {
       </div>
     </div>
   );
-}
+});
+

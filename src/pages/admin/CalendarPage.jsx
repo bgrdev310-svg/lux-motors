@@ -1,8 +1,5 @@
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import React, { useState, memo } from 'react';
 import { ChevronLeft, ChevronRight, Plus, Clock, MapPin, User } from 'lucide-react';
-
-const fadeUp = { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 } };
 
 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const dates = Array.from({ length: 35 }, (_, i) => i - 3);
@@ -26,13 +23,13 @@ const upcomingEvents = [
   { date: 'Mar 18', time: '02:00 PM', client: 'O. Hassan', type: 'GT3 Pickup', address: 'Dubai Marina', color: '#f59e0b' },
 ];
 
-const CalendarPage = () => {
+const CalendarPage = memo(() => {
   const [currentMonth] = useState('March 2026');
   const [activeView, setActiveView] = useState('Month');
 
   return (
-    <motion.div initial="initial" animate="animate" transition={{ staggerChildren: 0.08 }} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <motion.div className="admin-page-header" variants={fadeUp} transition={{ duration: 0.4 }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <div className="admin-page-header">
         <div>
           <h1 className="admin-page-title">Rental Schedule</h1>
           <p className="admin-page-subtitle">Manage vehicle deliveries, returns, and VIP appointments.</p>
@@ -45,15 +42,14 @@ const CalendarPage = () => {
                 background: activeView === v ? 'var(--admin-accent-light)' : 'transparent',
                 color: activeView === v ? 'var(--admin-accent-hover)' : 'var(--admin-text-secondary)',
                 fontWeight: 600, fontSize: '0.82rem', fontFamily: 'var(--admin-font)',
-                transition: 'var(--admin-transition)',
               }}>{v}</button>
             ))}
           </div>
           <button className="admin-btn"><Plus size={16} /> New Appointment</button>
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div variants={fadeUp} transition={{ duration: 0.4, delay: 0.1 }} className="admin-responsive-grid-sidebar" style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 20, flex: 1, minHeight: 0 }}>
+      <div className="admin-responsive-grid-sidebar" style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 20, flex: 1, minHeight: 0 }}>
         {/* Calendar Grid */}
         <div className="admin-card" style={{ padding: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderBottom: '1px solid var(--admin-border)', flexWrap: 'wrap', gap: 8 }}>
@@ -83,7 +79,6 @@ const CalendarPage = () => {
                   borderRight: '1px solid rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.03)',
                   padding: 8, minHeight: 90, position: 'relative', cursor: 'pointer',
                   background: isToday ? 'rgba(201, 168, 76,0.04)' : 'transparent',
-                  transition: 'background 0.2s',
                 }}>
                   <span style={{
                     fontSize: '0.82rem', fontWeight: 600,
@@ -99,7 +94,7 @@ const CalendarPage = () => {
                     <div key={ei} className="admin-cal-event" style={{
                       background: `${ev.color}18`, borderLeft: `3px solid ${ev.color}`,
                       padding: '3px 6px', borderRadius: 4, fontSize: '0.68rem', marginTop: 4,
-                      cursor: 'pointer', transition: 'transform 0.2s',
+                      cursor: 'pointer',
                     }}>
                       <div style={{ fontWeight: 700, color: ev.color }}>{ev.time}</div>
                       <div style={{ color: 'var(--admin-text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ev.client}</div>
@@ -119,7 +114,7 @@ const CalendarPage = () => {
               <div key={i} style={{
                 padding: 14, borderRadius: 'var(--admin-radius-sm)',
                 background: 'rgba(255,255,255,0.02)', border: '1px solid var(--admin-border)',
-                cursor: 'pointer', transition: 'var(--admin-transition)',
+                cursor: 'pointer',
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                   <span style={{ fontSize: '0.78rem', fontWeight: 700, color: ev.color, background: `${ev.color}15`, padding: '2px 10px', borderRadius: 6 }}>{ev.date}</span>
@@ -136,9 +131,9 @@ const CalendarPage = () => {
             ))}
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
-};
+});
 
 export default CalendarPage;

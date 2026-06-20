@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import React, { useState, memo } from 'react';
 import { Save, User, Lock, Bell, Globe, Shield, Camera } from 'lucide-react';
 import AdminSelect from '../../components/admin/AdminSelect';
-
-const fadeUp = { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 } };
 
 const tabs = [
   { id: 'profile', icon: <User size={18} />, label: 'Profile' },
@@ -19,22 +16,22 @@ const notificationSettings = [
   { label: 'Weekly analytics report', desc: 'Summary email every Monday', checked: false },
 ];
 
-const SettingsPage = () => {
+const SettingsPage = memo(() => {
   const [activeTab, setActiveTab] = useState('profile');
   const [language, setLanguage] = useState('English');
   const [timezone, setTimezone] = useState('UTC +2:00 (Cairo)');
 
   return (
-    <motion.div initial="initial" animate="animate" transition={{ staggerChildren: 0.08 }}>
-      <motion.div className="admin-page-header" variants={fadeUp} transition={{ duration: 0.4 }}>
+    <div>
+      <div className="admin-page-header">
         <div>
           <h1 className="admin-page-title">Settings</h1>
           <p className="admin-page-subtitle">Manage your account and platform preferences.</p>
         </div>
         <button className="admin-btn"><Save size={16} /> Save All</button>
-      </motion.div>
+      </div>
 
-      <motion.div variants={fadeUp} transition={{ duration: 0.4, delay: 0.1 }} className="admin-responsive-grid-settings" style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 24 }}>
+      <div className="admin-responsive-grid-settings" style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 24 }}>
         {/* Tab Nav */}
         <div className="admin-card admin-settings-tabs" style={{ padding: 12, height: 'fit-content', position: 'sticky', top: 20 }}>
           {tabs.map(t => (
@@ -158,9 +155,9 @@ const SettingsPage = () => {
             </div>
           )}
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
-};
+});
 
 export default SettingsPage;

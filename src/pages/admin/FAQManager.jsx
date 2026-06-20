@@ -1,8 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { motion } from 'motion/react';
+import React, { useState, useMemo, memo } from 'react';
 import { Plus, Edit2, Trash2, GripVertical, Eye, EyeOff, Search } from 'lucide-react';
-
-const fadeUp = { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 } };
 
 const initialFaqs = [
   { id: 1, question: 'What documents do I need to rent a luxury car in Dubai?', answer: 'UAE residents need Emirates ID, UAE driving license, and passport. Tourists need passport, visa, home country license, and International Driving Permit (IDP).', visible: true, category: 'Requirements' },
@@ -12,7 +9,7 @@ const initialFaqs = [
   { id: 5, question: 'Can I rent with a chauffeur?', answer: 'Yes. Executive RTA-licensed chauffeurs are available on request for select vehicles.', visible: true, category: 'Service' },
 ];
 
-const FAQManager = () => {
+const FAQManager = memo(() => {
   const [faqs, setFaqs] = useState(initialFaqs);
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -22,17 +19,17 @@ const FAQManager = () => {
   );
 
   return (
-    <motion.div initial="initial" animate="animate" transition={{ staggerChildren: 0.08 }}>
-      <motion.div className="admin-page-header" variants={fadeUp} transition={{ duration: 0.4 }}>
+    <div>
+      <div className="admin-page-header">
         <div>
           <h1 className="admin-page-title">FAQ Manager</h1>
           <p className="admin-page-subtitle">Manage frequently asked questions displayed on your site.</p>
         </div>
         <button className="admin-btn"><Plus size={16} /> Add FAQ</button>
-      </motion.div>
+      </div>
 
       {/* Stats Row */}
-      <motion.div variants={fadeUp} transition={{ duration: 0.4, delay: 0.1 }} style={{ display: 'flex', gap: 16, marginBottom: 24, flexWrap: 'wrap' }} className="admin-faq-stats">
+      <div style={{ display: 'flex', gap: 16, marginBottom: 24, flexWrap: 'wrap' }} className="admin-faq-stats">
         {[
           { label: 'Total FAQs', value: faqs.length, color: '#c9a84c' },
           { label: 'Visible', value: faqs.filter(f => f.visible).length, color: '#22c55e' },
@@ -46,18 +43,18 @@ const FAQManager = () => {
             <span style={{ fontSize: '0.85rem', color: 'var(--admin-text-secondary)', fontWeight: 500 }}>{s.label}</span>
           </div>
         ))}
-      </motion.div>
+      </div>
 
       {/* Search */}
-      <motion.div variants={fadeUp} transition={{ duration: 0.4, delay: 0.15 }} style={{ marginBottom: 20 }}>
+      <div style={{ marginBottom: 20 }}>
         <div className="admin-search" style={{ width: '100%', maxWidth: 400 }}>
           <Search size={18} color="var(--admin-text-muted)" />
           <input type="text" placeholder="Search FAQs..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
         </div>
-      </motion.div>
+      </div>
 
       {/* FAQ List */}
-      <motion.div variants={fadeUp} transition={{ duration: 0.4, delay: 0.2 }} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {filtered.map((faq) => (
           <div key={faq.id} className="admin-card admin-faq-item" style={{ padding: '18px 24px', display: 'flex', alignItems: 'center', gap: 16 }}>
             <GripVertical size={18} color="var(--admin-text-muted)" style={{ cursor: 'grab', flexShrink: 0 }} />
@@ -88,9 +85,9 @@ const FAQManager = () => {
             </div>
           </div>
         ))}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
-};
+});
 
 export default FAQManager;

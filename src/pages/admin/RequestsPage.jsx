@@ -1,9 +1,7 @@
-import React, { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Check, X, Eye, Calendar, User, Phone, Mail, MapPin, Filter, Search, ArrowUpRight } from 'lucide-react';
+import React, { useState, useMemo, memo, useCallback } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { Check, X, Eye, Calendar, User, Phone, Mail, MapPin } from 'lucide-react';
 import AdminSelect from '../../components/admin/AdminSelect';
-
-const fadeUp = { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 } };
 
 const requests = [
   { id: 'BK-001', name: 'Ahmed Al-Rashid', phone: '+971 50 123 4567', email: 'ahmed@example.com', address: 'DIFC, Dubai', service: 'Ferrari 488 GTB — 7 Days', date: 'Mar 08, 2026', preferred: 'Mar 15, 2026', status: 'pending' },
@@ -16,7 +14,7 @@ const requests = [
 
 const filters = ['All', 'Pending', 'Accepted', 'Completed', 'Rejected'];
 
-const RequestsPage = () => {
+const RequestsPage = memo(() => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [activeFilter, setActiveFilter] = useState('All');
@@ -35,19 +33,20 @@ const RequestsPage = () => {
     Rejected: requests.filter(r => r.status === 'rejected').length,
   }), []);
 
-  const handleAccept = (req) => { setSelectedRequest(req); setIsModalOpen(true); };
+  const handleAccept = useCallback((req) => { setSelectedRequest(req); setIsModalOpen(true); }, []);
+  const closeModal = useCallback(() => setIsModalOpen(false), []);
 
   return (
-    <motion.div initial="initial" animate="animate" transition={{ staggerChildren: 0.08 }}>
-      <motion.div className="admin-page-header" variants={fadeUp} transition={{ duration: 0.4 }}>
+    <div>
+      <div className="admin-page-header">
         <div>
           <h1 className="admin-page-title">Bookings & Reservations</h1>
           <p className="admin-page-subtitle">Manage VIP rental inquiries and delivery schedules.</p>
         </div>
-      </motion.div>
+      </div>
 
       {/* Filter Tabs */}
-      <motion.div variants={fadeUp} transition={{ duration: 0.4, delay: 0.1 }} style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
         {filters.map(f => (
           <button key={f} onClick={() => setActiveFilter(f)} style={{
             padding: '8px 18px', borderRadius: 20, border: '1px solid',
@@ -55,7 +54,7 @@ const RequestsPage = () => {
             background: activeFilter === f ? 'var(--admin-accent-light)' : 'rgba(255,255,255,0.03)',
             color: activeFilter === f ? 'var(--admin-accent-hover)' : 'var(--admin-text-secondary)',
             cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem',
-            fontFamily: 'var(--admin-font)', transition: 'var(--admin-transition)',
+            fontFamily: 'var(--admin-font)',
             display: 'flex', alignItems: 'center', gap: 8,
           }}>
             {f}
@@ -65,10 +64,10 @@ const RequestsPage = () => {
             }}>{counts[f]}</span>
           </button>
         ))}
-      </motion.div>
+      </div>
 
       {/* Table */}
-      <motion.div className="admin-card" style={{ padding: 0, overflow: 'hidden' }} variants={fadeUp} transition={{ duration: 0.4, delay: 0.15 }}>
+      <div className="admin-card" style={{ padding: 0, overflow: 'hidden' }}>
         <div className="admin-table-container">
           <table className="admin-table">
             <thead>
@@ -116,32 +115,32 @@ const RequestsPage = () => {
             </tbody>
           </table>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Accept & Schedule Modal */}
+      {/* Accept & Schedule Modal — AnimatePresence kept for modal UX */}
       <AnimatePresence>
         {isModalOpen && (
           <div style={{
             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-            background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)',
+            background: 'rgba(0,0,0,0.65)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200,
-          }} onClick={() => setIsModalOpen(false)}>
+          }} onClick={closeModal}>
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              transition={{ duration: 0.25 }}
+              transition={{ duration: 0.2 }}
               onClick={e => e.stopPropagation()}
               style={{
                 width: '100%', maxWidth: 580, margin: 20, maxHeight: '90vh', overflowY: 'auto',
-                background: 'rgba(12, 14, 28, 0.98)', backdropFilter: 'blur(20px)',
+                background: 'rgba(12, 14, 28, 0.99)',
                 border: '1px solid var(--admin-border)', borderRadius: 'var(--admin-radius-lg)',
                 boxShadow: '0 24px 80px rgba(0,0,0,0.5)', padding: '24px 20px',
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
                 <h2 style={{ fontSize: '1.4rem', fontWeight: 800, letterSpacing: '-0.02em' }}>Schedule Delivery</h2>
-                <button className="admin-icon-btn" onClick={() => setIsModalOpen(false)}><X size={18} /></button>
+                <button className="admin-icon-btn" onClick={closeModal}><X size={18} /></button>
               </div>
 
               {selectedRequest && (
@@ -198,8 +197,8 @@ const RequestsPage = () => {
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 28 }}>
-                <button className="admin-btn secondary" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                <button className="admin-btn success" onClick={() => setIsModalOpen(false)}>
+                <button className="admin-btn secondary" onClick={closeModal}>Cancel</button>
+                <button className="admin-btn success" onClick={closeModal}>
                   <Check size={16} /> Confirm Schedule
                 </button>
               </div>
@@ -207,8 +206,8 @@ const RequestsPage = () => {
           </div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
-};
+});
 
 export default RequestsPage;
