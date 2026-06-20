@@ -21,6 +21,15 @@ export default defineConfig({
           if (id.includes('node_modules/react-dom') || id.includes('node_modules/react/')) {
             return 'react-vendor';
           }
+          // Keep recharts + es-toolkit out of page chunks to avoid Rolldown minifier
+          // name collisions that crash Analytics in production ("t is not a function").
+          if (
+            id.includes('node_modules/recharts') ||
+            id.includes('node_modules/es-toolkit') ||
+            id.includes('node_modules/d3-')
+          ) {
+            return 'recharts-vendor';
+          }
         },
       },
     },
