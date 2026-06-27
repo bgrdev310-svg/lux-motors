@@ -41,6 +41,12 @@
   padding: 0 var(--container-padding);
 }
 
+@media (max-width: 767px) {
+  .sys-map__container {
+    padding: 0 12px;
+  }
+}
+
 /* Header Section */
 .sys-map__header {
   text-align: center;

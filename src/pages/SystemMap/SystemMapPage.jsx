@@ -166,6 +166,14 @@ export default function SystemMapPage() {
           background: linear-gradient(180deg, #c9a84c 0%, rgba(201, 168, 76, 0.1) 100%);
           z-index: 0;
         }
+        @media (max-width: 767px) {
+          .sys-map__wf-timeline {
+            padding-left: 0px;
+          }
+          .sys-map__wf-timeline::before {
+            left: 24px;
+          }
+        }
         .sys-map__wf-step {
           display: grid;
           grid-template-columns: 48px 1fr;
@@ -204,6 +212,11 @@ export default function SystemMapPage() {
           box-shadow: 0 8px 32px rgba(0,0,0,0.5);
           transition: border-color 0.3s ease;
         }
+        @media (max-width: 767px) {
+          .sys-map__wf-card {
+            padding: 16px 12px;
+          }
+        }
         .sys-map__wf-card:hover {
           border-color: rgba(201, 168, 76, 0.3);
         }
@@ -231,6 +244,11 @@ export default function SystemMapPage() {
           border-radius: 12px;
           padding: 20px;
           margin-top: 16px;
+        }
+        @media (max-width: 767px) {
+          .sys-map__wf-visual {
+            padding: 8px;
+          }
         }
         /* Green Capsule Available Badge */
         .sys-map__avail-pill {
@@ -451,19 +469,19 @@ export default function SystemMapPage() {
           position: relative;
           box-sizing: border-box;
         }
-        @media (max-width: 575px) {
+        @media (max-width: 767px) {
           .sys-map__mock-popup-header {
-            padding: 16px 16px 12px 16px;
+            padding: 16px 12px 12px 12px;
           }
           .sys-map__mock-popup-title {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
           }
           .sys-map__mock-popup-inner-card {
-            margin: 0 16px 12px 16px;
-            padding: 12px;
+            margin: 0 8px 12px 8px;
+            padding: 10px;
           }
           .sys-map__mock-popup-form {
-            padding: 0 16px 16px 16px;
+            padding: 0 8px 16px 8px;
             gap: 12px;
           }
           .sys-map__mock-toggle-btn {
@@ -2624,10 +2642,10 @@ export default function SystemMapPage() {
           <p className="sys-map__cta-desc">
             Let's launch the staging sandbox to demonstrate the integration flow live. We build parallel, you review, zero risk.
           </p>
-          <a href="/contact" className="sys-map__cta-btn">
-            <span>Initiate Parallel Sandbox Setup</span>
+          <button type="button" className="sys-map__cta-btn">
+            <span>Ready</span>
             <ArrowRight size={18} />
-          </a>
+          </button>
         </section>
 
       </div>
