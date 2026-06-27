@@ -140,6 +140,8 @@ export default function Footer() {
             <a href="/privacy" className="footer__bottom-link">Privacy</a>
             <span className="footer__bottom-sep" />
             <a href="/sitemap" className="footer__bottom-link">Sitemap</a>
+            <span className="footer__bottom-sep" />
+            <a href="/system-map" className="footer__bottom-link" style={{ color: 'var(--accent)', fontWeight: '600' }}>System Map</a>
           </div>
           <a
             href="#"

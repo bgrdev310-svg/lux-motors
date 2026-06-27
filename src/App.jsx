@@ -15,6 +15,7 @@ const DestinationsPage = lazy(() => import('./pages/Destinations/DestinationsPag
 const BlogPage = lazy(() => import('./pages/Blog/BlogPage'));
 const BlogArticlePage = lazy(() => import('./pages/Blog/BlogArticlePage'));
 const RequestStatusPage = lazy(() => import('./pages/Garage/RequestStatusPage'));
+const SystemMapPage = lazy(() => import('./pages/SystemMap/SystemMapPage'));
 
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
 const AnalyticsPage = lazy(() => import('./pages/admin/AnalyticsPage'));
@@ -83,6 +84,7 @@ function AppRoutes() {
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogArticlePage />} />
           <Route path="/garage" element={<RequestStatusPage />} />
+          <Route path="/system-map" element={<SystemMapPage />} />
         </Route>
 
         <Route path="/admin" element={<AdminLayout />}>
